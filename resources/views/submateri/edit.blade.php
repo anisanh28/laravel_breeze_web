@@ -1,42 +1,68 @@
-@extends('layouts.app')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-white leading-tight">
+            {{ __('Edit SubMateri') }}
+        </h2>
+    </x-slot>
 
-@section('content')
-    <div class="container">
-        <h1>Edit Submateri</h1>
-        <form action="{{ route('submateri.update', $submateri->id) }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            @method('PUT')
-            <div class="mb-3">
-                <label for="materi_id" class="form-label">Materi</label>
-                <select name="materi_id" id="materi_id" class="form-control" required>
-                    @foreach($materis as $materi)
-                        <option value="{{ $materi->id }}" {{ $materi->id == $submateri->materi_id ? 'selected' : '' }}>{{ $materi->judulMateri }}</option>
-                    @endforeach
-                </select>
+    <div class="py-8">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-4">
+            <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg">
+                <div class="p-6 text-gray-900 dark:text-gray-100">
+                    <h3 class="text-lg font-semibold mb-4">Edit Data SubMateri</h3>
+
+                    <form method="POST" action="{{ route('submateri.update', [$submateri->id]) }}" enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
+
+                        <!-- Judul SubMateri -->
+                        <div class="mb-4">
+                            <label for="judulSubMateri" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Judul SubMateri</label>
+                            <input type="text" id="judulSubMateri" name="judulSubMateri"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm text-black dark:text-gray-800 focus:border-orange-500 focus:ring focus:ring-orange-500 focus:ring-opacity-50"
+                                value="{{ old('judulSubMateri', $submateri->judulSubMateri) }}" required>
+                        </div>
+
+                        <!-- Tujuan Pembelajaran -->
+                        <div class="mb-4">
+                            <label for="tujuanPembelajaran" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tujuan Pembelajaran</label>
+                            <textarea id="tujuanPembelajaran" name="tujuanPembelajaran"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm text-black dark:text-gray-800 focus:border-orange-500 focus:ring focus:ring-orange-500 focus:ring-opacity-50"
+                                rows="3" required>{{ old('tujuanPembelajaran', $submateri->tujuanPembelajaran) }}</textarea>
+                        </div>
+
+                        <!-- Content Pembelajaran -->
+                        <div class="mb-4">
+                            <label for="content" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Konten Pembelajaran</label>
+                            <textarea id="content" name="content"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm text-black dark:text-gray-800 focus:border-orange-500 focus:ring focus:ring-orange-500 focus:ring-opacity-50"
+                                rows="5" required>{{ old('content', $submateri->content) }}</textarea>
+                        </div>
+
+                        <!-- File Lampiran -->
+                        <div class="mb-4">
+                            <label for="file" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Lampiran</label>
+                            <input type="file" id="file" name="file"
+                                class="mt-1 block w-full text-black focus:border-orange-500 focus:ring focus:ring-orange-500 focus:ring-opacity-50">
+
+                            @if($submateri->file)
+                                <p class="text-sm text-gray-500 mt-2">
+                                    File saat ini:
+                                    <a href="{{ asset('storage/'.$submateri->file) }}" target="_blank" class="text-orange-500 underline">Lihat File</a>
+                                </p>
+                            @endif
+                        </div>
+
+                        <!-- Tombol Update -->
+                        <div class="flex justify-end">
+                            <button type="submit"
+                                class="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50">
+                                Update
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-
-            <div class="mb-3">
-                <label for="judulSubMateri" class="form-label">Judul Submateri</label>
-                <input type="text" class="form-control" id="judulSubMateri" name="judulSubMateri" value="{{ $submateri->judulSubMateri }}" required>
-            </div>
-
-            <div class="mb-3">
-                <label for="tujuanPembelajaran" class="form-label">Tujuan Pembelajaran</label>
-                <textarea class="form-control" id="tujuanPembelajaran" name="tujuanPembelajaran" required>{{ $submateri->tujuanPembelajaran }}</textarea>
-            </div>
-
-            <div class="mb-3">
-                <label for="content" class="form-label">Content</label>
-                <textarea class="form-control" id="content" name="content" required>{{ $submateri->content }}</textarea>
-            </div>
-
-            <div class="mb-3">
-                <label for="file" class="form-label">File</label>
-                <input type="file" class="form-control" id="file" name="file">
-                <p>Current file: {{ $submateri->file }}</p>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Update</button>
-        </form>
+        </div>
     </div>
-@endsection
+</x-app-layout>

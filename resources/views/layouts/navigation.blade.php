@@ -38,11 +38,11 @@
                     <!-- Siswa links -->
                     @if(Auth::user()->role=='siswa')
                     <x-nav-link href="/materi" :active="request()->routeIs('materi')">
-                        {{ __('Materi') }}
+                        {{ __('Home Activity') }}
                     </x-nav-link>
 
-                    <x-nav-link href="/tugas" :active="request()->routeIs('siswa.tugas')">
-                        {{ __('Tugas') }}
+                    <x-nav-link href="/classroomactivity" :active="request()->routeIs('siswa.tugas')">
+                        {{ __('Classroom Activity') }}
                     </x-nav-link>
 
                     <x-nav-link href="/evaluasi" :active="request()->routeIs('siswa.evaluasi')">

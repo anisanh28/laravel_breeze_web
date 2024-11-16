@@ -23,8 +23,10 @@
                                 @if(isset($materiItem->submateri) && $materiItem->submateri->isNotEmpty())
                                     @foreach ($materiItem->submateri as $submateri)
                                         <div class="py-2">
-                                            <h3 class="text-sm text-gray-300">{{ $submateri->judul }}</h3>
-                                            <p class="text-xs text-gray-400 mt-1">{{ $submateri->content }}</p>
+                                            <!-- Add link to submateri detail -->
+                                            <a href="{{ route('submateri.show', ['materi' => $materiItem->id, 'submateri' => $submateri->id]) }}" class="text-sm text-blue-500 hover:underline">
+                                                {{ $submateri->judulSubMateri }}
+                                            </a>
                                         </div>
                                     @endforeach
                                 @else

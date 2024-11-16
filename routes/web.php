@@ -19,8 +19,6 @@ Route::get('/tentangkami', function () {
 Route::resource('materi', MateriController::class);
 Route::resource('submateri', SubmateriController::class);
 
-
-
 // Middleware untuk autentikasi
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -31,8 +29,10 @@ Route::middleware('auth')->group(function () {
 // Siswa Routes (Akses materi hanya untuk index dan show)
 Route::middleware(['auth', 'siswa'])->group(function () {
     Route::get('dashboard', [SiswaController::class, 'index'])->name('dashboard');
-    Route::get('/materi', [MateriController::class, 'index'])->name('materi.siswa'); // Akses untuk materi (index)
-    Route::get('/materi/{materi}', [MateriController::class, 'show'])->name('materi.show'); // Akses untuk detail materi (show)
+    Route::get('/materi', [MateriController::class, 'index'])->name('materi.siswa');
+    Route::get('/materi/{materi}', action: [MateriController::class, 'show'])->name('materi.show');
+    Route::get('/materi/{materi}/submateri/{submateri}', [SubMateriController::class, 'show'])->name('submateri.show');
+
 });
 
 // Guru Routes (Akses penuh untuk guru)
@@ -47,8 +47,12 @@ Route::middleware(['auth', 'guru'])->group(function () {
     Route::delete('/materi/{materi}', [MateriController::class, 'destroy'])->name('materi.destroy'); // Menghapus materi
 
     Route::get('{materi_id}/submateri', [SubmateriController::class, 'index'])->name('submateri.index');
-    Route::get('/submateri/create/{materi_id}', [SubmateriController::class,'create'])->name('submateri.create');
-    Route::post('{materi_id}/submateri}', [SubmateriController::class, 'store'])->name('submateri.store'); // Menyimpan materi
+    Route::get('{materi_id}/submateri/create', [SubmateriController::class,'create'])->name('submateri.create');
+    Route::post('{materi_id}/submateri}', [SubmateriController::class, 'store'])->name('submateri.store'); // Menyimpan materi
+    Route::get('/submateri/{id}/edit', [SubmateriController::class, 'edit'])->name('submateri.edit');
+    Route::put('/submateri/{id}', [SubmateriController::class, 'update'])->name('submateri.update');
+    Route::delete('/submateri/{id}', [SubmateriController::class, 'destroy'])->name('submateri.destroy');
+
 });
 
 require __DIR__.'/auth.php';

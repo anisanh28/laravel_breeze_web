@@ -8,9 +8,11 @@
     <div class="py-4">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <!-- Button to create new submateri -->
-            <a href="{{ route('submateri.create')}}" class="inline-block px-6 py-3 bg-orange-600 text-white font-semibold rounded-lg shadow-md hover:bg-orange-700 transition-all duration-300 mb-6">
+            <a href="{{ route('submateri.create', $materi_id)}}" class="inline-block px-6 py-3 bg-orange-600 text-white font-semibold rounded-lg shadow-md hover:bg-orange-700 transition-all duration-300 mb-6">
                 Tambah SubMateri
             </a>
+
+
 
             <!-- Table layout for submateri list -->
             <div class="bg-gray-800 text-white overflow-hidden shadow-sm sm:rounded-lg">
