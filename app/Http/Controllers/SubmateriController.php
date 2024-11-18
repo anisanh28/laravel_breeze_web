@@ -67,13 +67,13 @@ class SubmateriController extends Controller
             abort(404, 'Submateri not found in this Materi');
         }
 
-        $user = Auth()->user();
-        $jawabanWarmUp = JawabanWarmUp::where('submateri_id', $submateri->id)->where('user_id', $user->id());
-        $user->id;
+        $user = Auth::user();
+        $jawabanWarmUp = JawabanWarmUp::where('submateri_id', $submateri->id)
+            ->where('user_id', $user->id)
+            ->first();  // Get the results
 
         return view('submateri.show', compact('materi', 'submateri', 'jawabanWarmUp'));
     }
-
     //Mengedit inputan
     public function edit($id)
     {
