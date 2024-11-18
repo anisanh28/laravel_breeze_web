@@ -37,7 +37,8 @@ class SubmateriController extends Controller
             'judulSubMateri' => 'required|string|max:255',
             'tujuanPembelajaran' => 'required|string|max:255',
             'content' => 'required|string',
-            'file' => 'required|file|mimes:pdf,doc,docx,zip,png,jpg,jpeg,mp3,mp4,|max:102400'
+            'file' => 'required|file|mimes:pdf,doc,docx,zip,png,jpg,jpeg,mp3,mp4,|max:102400',
+            'soal_warm_up' => 'required|string'
         ]);
 
         // Proses upload file
@@ -50,6 +51,7 @@ class SubmateriController extends Controller
             'tujuanPembelajaran' => $request->tujuanPembelajaran,
             'content' => $request->content,
             'file' => $filePath ?? null,
+            'soal_warm_up' => $request->soal_warm_up?? null,
         ]);
 
         return redirect()->route('submateri.index', compact('materi_id'))->with('success', 'SubMateri berhasil ditambahkan!');
@@ -81,7 +83,8 @@ class SubmateriController extends Controller
         'judulSubMateri' => 'required|string|max:255',
         'tujuanPembelajaran' => 'required|string',
         'content' => 'required|string',
-        'file' => 'nullable|file|mimes:pdf,doc,docx,zip,png,jpg,jpeg,mp3,mp4|max:102400'
+        'file' => 'nullable|file|mimes:pdf,doc,docx,zip,png,jpg,jpeg,mp3,mp4|max:102400',
+        'soal_warm_up' => 'required|string'
     ]);
 
     $submateri = Submateri::findOrFail($id);
@@ -90,6 +93,7 @@ class SubmateriController extends Controller
     $submateri->judulSubMateri = $request->judulSubMateri;
     $submateri->tujuanPembelajaran = $request->tujuanPembelajaran;
     $submateri->content = $request->content;
+    $submateri->soal_warm_up = $request->soal_warm_up;
 
     // Update file if a new file is uploaded
     if ($request->hasFile('file')) {

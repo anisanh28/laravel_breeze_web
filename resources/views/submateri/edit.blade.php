@@ -53,6 +53,13 @@
                             @endif
                         </div>
 
+                        <div class="mb-4">
+                            <label for="soal_warm_up" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Soal Warm Up</label>
+                            <textarea id="soal_warm_up" name="soal_warm_up"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm text-black dark:text-gray-800 focus:border-orange-500 focus:ring focus:ring-orange-500 focus:ring-opacity-50"
+                                rows="5" required>{{ old('soal_warm_up', $submateri->soal_warm_up) }}</textarea>
+                        </div>
+
                         <!-- Tombol Update -->
                         <div class="flex justify-end">
                             <button type="submit"

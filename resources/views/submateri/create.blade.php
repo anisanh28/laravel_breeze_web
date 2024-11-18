@@ -27,6 +27,10 @@
                             <label for="file" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Lampiran</label>
                             <input type="file" id="file" name="file" class="mt-1 block w-full text-black focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50" required>
                         </div>
+                        <div class="mb-4">
+                            <label for="content" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Soal Warm Up</label>
+                            <input type="text" id="soal_warm_up" name="soal_warm_up" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm text-black focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50" required>
+                        </div>
                         <button type="submit" class="mt-4 bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700">Simpan</button>
                     </form>
                 </div>

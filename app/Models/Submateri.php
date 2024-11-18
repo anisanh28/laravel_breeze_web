@@ -10,7 +10,7 @@ class Submateri extends Model
     use HasFactory;
     protected $table = 'submateri';
     protected $fillable = [
-        'materi_id', 'judulSubMateri', 'tujuanPembelajaran', 'content', 'file'
+        'materi_id', 'judulSubMateri', 'tujuanPembelajaran', 'content', 'file','soal_warm_up'
     ];
 
     public function materi()

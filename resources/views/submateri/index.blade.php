@@ -12,8 +12,6 @@
                 Tambah SubMateri
             </a>
 
-
-
             <!-- Table layout for submateri list -->
             <div class="bg-gray-800 text-white overflow-hidden shadow-sm sm:rounded-lg">
                 <table class="min-w-full bg-gray-800">
@@ -22,7 +20,7 @@
                             <th class="py-3 px-6 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Judul Submateri</th>
                             <th class="py-3 px-6 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Tujuan Pembelajaran</th>
                             <th class="py-3 px-6 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Content</th>
-                            <th class="py-3 px-6 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">File</th>
+                            <th class="py-3 px-6 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Soal Warm Up</th>
                             <th class="py-3 px-6 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
@@ -33,14 +31,22 @@
                                     <td class="py-4 px-6">{{ $submateriItem->judulSubMateri }}</td>
                                     <td class="py-4 px-6">{{ $submateriItem->tujuanPembelajaran }}</td>
                                     <td class="py-4 px-6">{{ $submateriItem->content }}</td>
-                                    <td class="py-4 px-6">{{ $submateriItem->file }}</td>
+                                    <td class="py-4 px-6">
+                                        <a href="{{ route('jawabWarmUp.index', $submateriItem->id) }}" class="text-blue-400 hover:text-blue-600 transition-all duration-300">
+                                            {{ $submateriItem->soal_warm_up }}
+                                        </a>
+                                    </td>
                                     <td class="py-4 px-6 flex space-x-4">
+                                        <!-- Edit Link -->
                                         <a href="{{ route('submateri.edit', $submateriItem->id) }}" class="text-blue-400 hover:text-blue-600 transition-all duration-300">Edit</a>
+
+                                        <!-- Delete Form -->
                                         <form action="{{ route('submateri.destroy', $submateriItem->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this submateri?');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="text-red-400 hover:text-red-600 transition-all duration-300">Delete</button>
                                         </form>
+
                                     </td>
                                 </tr>
                             @endforeach
