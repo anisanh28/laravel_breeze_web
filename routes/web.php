@@ -19,6 +19,8 @@ Route::get('/tentangkami', function () {
 // Resource route untuk materi dan submateri
 Route::resource('materi', MateriController::class);
 Route::resource('submateri', SubmateriController::class);
+Route::resource('jawabanWarmUp', JawabWarmUpController::class);
+
 
 // Middleware untuk autentikasi
 Route::middleware('auth')->group(function () {
@@ -32,9 +34,14 @@ Route::middleware(['auth', 'siswa'])->group(function () {
     Route::get('/materi', [MateriController::class, 'index'])->name('materi.siswa');
     Route::get('/materi/{materi}', action: [MateriController::class, 'show'])->name('materi.show');
     Route::get('/materi/{materi}/submateri/{submateri}', [SubMateriController::class, 'show'])->name('submateri.show');
+
     Route::get('/jawaban-warm-up/create',[JawabWarmUpController::class,'create'])->name('jawabanWarmUp.create');
+    Route::get('/jawaban-warm-up/{id}/edit',[JawabWarmUpController::class,'edit'])->name('jawabanWarmUp.edit');
+    Route::patch('/jawaban-warm-up/{id}',[JawabWarmUpController::class,'update'])->name('jawabanWarmUp.update');
     Route::post('/jawaban-warm-up', [JawabWarmUpController::class, 'store'])->name('jawabanWarmUp.store');
-    Route::post('/jawaban-warm-up/{id}', [JawabWarmUpController::class, 'show'])->name('jawabanWarmUp.show');
+    Route::get('/jawaban-warm-up/{id}', [JawabWarmUpController::class, 'show'])->name('jawabanWarmUp.show');
+    Route::delete('/jawaban-warm-up/{id}', [JawabWarmUpController::class, 'destroy'])->name('jawabanWarmUp.destroy');
+
 });
 
 // Guru Routes (Akses penuh untuk guru)

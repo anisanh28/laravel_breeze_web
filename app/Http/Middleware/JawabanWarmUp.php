@@ -19,19 +19,24 @@ class JawabanWarmUp
     public function handle(Request $request, Closure $next): Response
     {
         if (Auth::check()) {
-            if (Auth::user()->role === 'siswa') {
-                if (in_array($request->route()->getActionMethod(), ['create', 'store','edit','delete','show'])) {
-                    return $next($request);
+            $user = Auth::user();
+            
+            // Untuk siswa: hanya izinkan akses pada metode tertentu
+            if ($user->role === 'siswa') {
+                if (in_array($request->route()->getActionMethod(), ['create', 'store', 'edit', 'update', 'show', 'destroy'])) {
+                    return $next($request); // Lanjutkan jika siswa mengakses metode yang diperbolehkan
                 }
             }
 
-            if (Auth::user()->role === 'guru') {
+            // Untuk guru: hanya izinkan akses pada metode tertentu
+            if ($user->role === 'guru') {
                 if (in_array($request->route()->getActionMethod(), ['index'])) {
-                    return $next($request);
+                    return $next($request); // Lanjutkan jika guru mengakses metode yang diperbolehkan
                 }
             }
         }
 
-    return redirect()->route('login')->with('error', 'Anda tidak memiliki izin untuk mengakses materi ini.');
-}
+        // Jika user tidak diizinkan, redirect ke login dengan pesan error
+        return redirect()->route('login')->with('error', 'Anda tidak memiliki izin untuk mengakses materi ini.');
+    }
 }

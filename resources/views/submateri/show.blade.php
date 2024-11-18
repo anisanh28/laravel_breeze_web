@@ -56,21 +56,22 @@
     </div>
 
     <div class="pt-2 pb-8">
-        @if ($jawabanWarmUp)
-    <!-- Jika sudah menjawab -->
-    <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg p-6">
-        <h2 class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4 text-xl font-bold">
-            Jawaban Anda:
-        </h2>
-        <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-6">
-            {{ $jawabanWarmUp->jawaban }}
-        </p>
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-4">
+            @if ($jawabanWarmUp)
+                <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg p-6">
+                    <h2 class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4 text-xl font-bold">
+                        Jawaban Anda:
+                    </h2>
 
-        @if ($jawabanWarmUp->file)
-            <p class="text-sm text-gray-500 dark:text-gray-400">
-                File yang diunggah:
-                <a href="{{ asset('storage/' . $jawabanWarmUp->file) }}" target="_blank" class="text-indigo-500 hover:underline">
-                    Lihat file
+                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-6">
+                        {{ $jawabanWarmUp->jawaban }}
+                    </p>
+
+                @if ($jawabanWarmUp->file)
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                        File yang diunggah:
+                    <a href="{{ asset('storage/' . $jawabanWarmUp->file) }}" target="_blank" class="text-indigo-500 hover:underline">
+                        Lihat file
                 </a>
             </p>
         @endif
@@ -83,8 +84,8 @@
 
             <form method="POST" action="{{ route('jawabanWarmUp.destroy', $jawabanWarmUp->id) }}">
                 @csrf
-                @method('DELETE')
-                <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500">
+                @method('DELETE')  <!-- Override method menjadi DELETE -->
+                <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">
                     Hapus Jawaban
                 </button>
             </form>
@@ -96,4 +97,5 @@
 @endif
 
     </div>
+</div>
 </x-app-layout>
