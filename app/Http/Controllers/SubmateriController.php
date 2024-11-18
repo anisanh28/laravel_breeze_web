@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Submateri;
 use App\Models\Materi;
+use App\Models\User;
+use App\Models\JawabanWarmUp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -65,7 +67,11 @@ class SubmateriController extends Controller
             abort(404, 'Submateri not found in this Materi');
         }
 
-        return view('submateri.show', compact('materi', 'submateri'));
+        $user = Auth()->user();
+        $jawabanWarmUp = JawabanWarmUp::where('submateri_id', $submateri->id)->where('user_id', $user->id());
+        $user->id;
+
+        return view('submateri.show', compact('materi', 'submateri', 'jawabanWarmUp'));
     }
 
     //Mengedit inputan

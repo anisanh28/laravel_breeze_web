@@ -20,13 +20,13 @@ class JawabanWarmUp
     {
         if (Auth::check()) {
             if (Auth::user()->role === 'siswa') {
-                if (in_array($request->route()->getActionMethod(), ['create', 'store','edit','delete'])) {
+                if (in_array($request->route()->getActionMethod(), ['create', 'store','edit','delete','show'])) {
                     return $next($request);
-                } 
+                }
             }
 
             if (Auth::user()->role === 'guru') {
-                if (in_array($request->route()->getActionMethod(), ['index', 'show'])) {
+                if (in_array($request->route()->getActionMethod(), ['index'])) {
                     return $next($request);
                 }
             }

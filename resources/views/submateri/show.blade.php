@@ -56,6 +56,44 @@
     </div>
 
     <div class="pt-2 pb-8">
-        @include('warmUp.create', ['submateri' => $submateri])
+        @if ($jawabanWarmUp)
+    <!-- Jika sudah menjawab -->
+    <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg p-6">
+        <h2 class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4 text-xl font-bold">
+            Jawaban Anda:
+        </h2>
+        <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-6">
+            {{ $jawabanWarmUp->jawaban }}
+        </p>
+
+        @if ($jawabanWarmUp->file)
+            <p class="text-sm text-gray-500 dark:text-gray-400">
+                File yang diunggah:
+                <a href="{{ asset('storage/' . $jawabanWarmUp->file) }}" target="_blank" class="text-indigo-500 hover:underline">
+                    Lihat file
+                </a>
+            </p>
+        @endif
+
+        <!-- Tombol Edit dan Delete -->
+        <div class="mt-4 flex space-x-4">
+            <a href="{{ route('jawabanWarmUp.edit', $jawabanWarmUp->id) }}" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                Edit Jawaban
+            </a>
+
+            <form method="POST" action="{{ route('jawabanWarmUp.destroy', $jawabanWarmUp->id) }}">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500">
+                    Hapus Jawaban
+                </button>
+            </form>
+        </div>
+    </div>
+@else
+    <!-- Jika belum menjawab -->
+    @include('warmUp.create', ['submateri' => $submateri])
+@endif
+
     </div>
 </x-app-layout>

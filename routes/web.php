@@ -32,7 +32,9 @@ Route::middleware(['auth', 'siswa'])->group(function () {
     Route::get('/materi', [MateriController::class, 'index'])->name('materi.siswa');
     Route::get('/materi/{materi}', action: [MateriController::class, 'show'])->name('materi.show');
     Route::get('/materi/{materi}/submateri/{submateri}', [SubMateriController::class, 'show'])->name('submateri.show');
+    Route::get('/jawaban-warm-up/create',[JawabWarmUpController::class,'create'])->name('jawabanWarmUp.create');
     Route::post('/jawaban-warm-up', [JawabWarmUpController::class, 'store'])->name('jawabanWarmUp.store');
+    Route::post('/jawaban-warm-up/{id}', [JawabWarmUpController::class, 'show'])->name('jawabanWarmUp.show');
 });
 
 // Guru Routes (Akses penuh untuk guru)

@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Models\JawabWarmUp;
+use App\Models\JawabanWarmUp;
+use App\Models\User;
 use App\Models\SubMateri;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,7 +12,8 @@ class JawabWarmUpController extends Controller
     public function index($submateri_id)
     {
         $submateri = SubMateri::findOrFail($submateri_id);
-        $jawabanWarmUp = JawabWarmUp::where('submateri_id', $submateri_id)->with('user')->get(); // Eager loading relasi user->get();
+        $jawabanWarmUp = JawabanWarmUp::where('submateri_id', $submateri_id)->get();
+
         return view('warmUp.index', compact('submateri', 'jawabanWarmUp'));
     }
 
@@ -30,7 +31,7 @@ class JawabWarmUpController extends Controller
             'file' => 'nullable|file|mimes:jpg,jpeg,png,pdf,docx,txt,mp4|max:10240',
         ]);
 
-        $jawabanWarmUp = new JawabWarmUp();
+        $jawabanWarmUp = new JawabanWarmUp();
         $jawabanWarmUp->submateri_id = $request->submateri_id;
         $jawabanWarmUp->user_id = Auth::id();
         $jawabanWarmUp->jawaban = $request->jawaban;
@@ -42,58 +43,58 @@ class JawabWarmUpController extends Controller
 
         $jawabanWarmUp->save();
 
-        return redirect()->route('subamteri.index', $request->submateri_id)->with('success', 'Jawaban berhasil dikirim!');
+        return redirect()->route('jawabanWarmUp.index', $request->submateri_id)->with('success', 'Jawaban berhasil dikirim!');
     }
 
-    public function show($submateri_id)
+    public function show($submateri_id, $user_id)
     {
-        $submateri = SubMateri::findOrFail($submateri_id);
-        $jawabanWarmUp = JawabWarmUp::where('submateri_id', $submateri_id)->where('user_id', Auth::id())->first();
-        
+    $submateri = SubMateri::findOrFail($submateri_id);
+    $jawabanWarmUp = JawabanWarmUp::where('submateri_id', $submateri_id)->where('user_id', $user_id)->first();
 
-        return view('jawabanWarmUp.show', compact('submateri', 'jawabanWarmUp'));
-}
-
-public function edit($id)
-{
-    $jawabanWarmUp = JawabWarmUp::findOrFail($id);
-
-    if ($jawabanWarmUp->user_id !== Auth::id()) {
-        abort(403, 'Unauthorized action.');
+    return view('submateri.show', compact('submateri', 'jawabanWarmUp'));
     }
 
-    return view('jawabanWarmUp.edit', compact('jawabanWarmUp'));
-}
+    public function edit($id)
+    {
+        $jawabanWarmUp = JawabanWarmUp::findOrFail($id);
 
-public function update(Request $request, $id)
-{
-    $request->validate([
-        'jawaban' => 'required|string',
-        'file' => 'nullable|file|mimes:jpg,jpeg,png,pdf,docx,txt,mp4|max:10240',
-    ]);
+        if ($jawabanWarmUp->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
 
-    $jawabanWarmUp = JawabWarmUp::findOrFail($id);
+        $submateri = SubMateri::findOrFail($jawabanWarmUp->submateri_id);
 
-    if ($jawabanWarmUp->user_id !== Auth::id()) {
-        abort(403, 'Unauthorized action.');
+        return view('jawabanWarmUp.edit', compact('submateri', 'jawabanWarmUp'));
     }
 
-    $jawabanWarmUp->jawaban = $request->jawaban;
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'jawaban' => 'required|string',
+            'file' => 'nullable|file|mimes:jpg,jpeg,png,pdf,docx,txt,mp4|max:10240',
+        ]);
 
-    // Handle file replacement
-    if ($request->hasFile('file')) {
-        $filePath = $request->file('file')->store('uploads','public');
-        $jawabanWarmUp->file = $filePath;
-    }
+        $jawabanWarmUp = JawabanWarmUp::findOrFail($id);
 
-    $jawabanWarmUp->save();
+        if ($jawabanWarmUp->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
 
-    return redirect()->route('jawabanWarmUp.show', $jawabanWarmUp->submateri_id)->with('success', 'Jawaban berhasil diperbarui!');
+        $jawabanWarmUp->jawaban = $request->jawaban;
+
+        if ($request->hasFile('file')) {
+            $filePath = $request->file('file')->store('uploads', 'public');
+            $jawabanWarmUp->file = $filePath;
+        }
+
+        $jawabanWarmUp->save();
+
+        return redirect()->route('jawabanWarmUp.index', $jawabanWarmUp->submateri_id)->with('success', 'Jawaban berhasil diperbarui!');
     }
 
     public function destroy($id)
     {
-        $jawabanWarmUp = JawabWarmUp::findOrFail($id);
+        $jawabanWarmUp = JawabanWarmUp::findOrFail($id);
 
         if ($jawabanWarmUp->user_id !== Auth::id()) {
             abort(403, 'Unauthorized action.');
