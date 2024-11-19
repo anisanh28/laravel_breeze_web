@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Evaluasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class EvaluasiController extends Controller
 {
@@ -50,8 +51,10 @@ class EvaluasiController extends Controller
         return redirect()->route('guru.evaluasi')->with('success', 'Evaluasi berhasil ditambahkan!');
     }
 
-    public function show(Evaluasi $evaluasi)
+    public function show(Evaluasi $evaluasi, $id)
     {
+        $evaluasi = Evaluasi::findOrFail($id);
+
         return view('evaluasi.show', compact('evaluasi'));
     }
 

@@ -20,27 +20,36 @@ class PertanyaanController extends Controller
     }
 
     public function create($evaluasi_id){
-        $evaluasi = Evaluasi::all();
-        return view('pertanyaan.create',compact('pertanyaan','evaluasi_id'));
+
+        $evaluasi = Evaluasi::findOrFail($evaluasi_id);
+
+        return view('pertanyaan.create',compact('evaluasi'));
     }
 
-    public function store(Request $request, $evaluasi_id){
-        $request->validate([
-            'pertanyaan' => 'required|string|max:255',
-            'file'=>'required|file|mimes:png,jpg,jpeg,mp3,mp4,mov|max:10240',
-            'skor'=>'required|integer|max:255',
-        ]);
+    public function store(Request $request, $evaluasi_id)
+    {
+    $request->validate([
+        'pertanyaan' => 'required|string',
+        'opsi' => 'required|array|min:2', // Minimum 2 opsi
+        'opsi.*' => 'required|string|max:255',
+        'jawaban_benar' => 'required|integer|min:1',
+    ]);
 
-        if($request->hasFile('file')){
-            $filePath = $request->file('file')->store('uploads','public');
-        }
-        Pertanyaan::create([
-            'evaluasi_id' => $evaluasi_id,
-            'pertanyaan' => $request->input('pertanyaan'),
-            'file' => $filePath?? null,
-            'skor' => $request->input('skor'),
+    // Simpan pertanyaan
+    $pertanyaan = new Pertanyaan();
+    $pertanyaan->evaluasi_id = $evaluasi_id;
+    $pertanyaan->pertanyaan = $request->pertanyaan;
+    $pertanyaan->save();
+
+    // Simpan opsi
+    foreach ($request->opsi as $index => $opsiText) {
+        $pertanyaan->opsi()->create([
+            'opsi' => $opsiText,
+            'is_benar' => ($index + 1 == $request->jawaban_benar) ? true : false,
         ]);
-        return redirect()->route('pertanyaan.index',compact('evaluasi_id'))->with('success','Pertanyaan berhasi ditambahkan');
+    }
+
+    return redirect()->route('evaluasi.show', $evaluasi_id)->with('success', 'Pertanyaan berhasil ditambahkan.');
     }
 
     public function show(Evaluasi $evaluasi, Pertanyaan $pertanyaan){

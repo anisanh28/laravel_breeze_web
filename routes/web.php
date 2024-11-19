@@ -73,10 +73,12 @@ Route::middleware(['auth', 'guru'])->group(function () {
     Route::get('/evaluasi/{evaluasi}/edit', [EvaluasiController::class, 'edit'])->name('evaluasi.edit');
     Route::put('/evaluasi/{evaluasi}', [EvaluasiController::class, 'update'])->name('evaluasi.update');
     Route::delete('/evaluasi/{evaluasi}', [EvaluasiController::class, 'destroy'])->name('evaluasi.destroy');
+    Route::get('/evaluasi/{id}', [EvaluasiController::class, 'show'])->name('evaluasi.show');
+
 
     Route::get('{evaluasi_id}/pertanyaan', [PertanyaanController::class, 'index'])->name('pertanyaan.index');
     Route::get('{evaluasi_id}/pertanyaan/create', [PertanyaanController::class,'create'])->name('pertanyaan.create');
-    Route::post('{evaluasi_id}/pertanyaan}', [PertanyaanController::class, 'store'])->name('pertanyaan.store'); // Menyimpan materi
+    Route::post('{evaluasi_id}/pertanyaan', [PertanyaanController::class, 'store'])->name('pertanyaan.store');
     Route::get('/pertanyaan/{id}/edit', [PertanyaanController::class, 'edit'])->name('pertanyaan.edit');
     Route::put('/pertanyaan/{id}', [PertanyaanController::class, 'update'])->name('pertanyaan.update');
     Route::delete('/pertanyaan/{id}', [PertanyaanController::class, 'destroy'])->name('pertanyaan.destroy');

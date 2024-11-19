@@ -17,10 +17,10 @@ class OpsiController extends Controller
         }
     }
 
-    public function create($pertanyaan_id){
-        $opsi = Opsi::all();
-        return view('opsi.create',compact('opsi','pertanyaan_id'));
+    public function create($evaluasi_id){
+    return view('opsi.create', ['evaluasi_id' => $evaluasi_id]);
     }
+
 
     public function store(Request $request, $pertanyaan_id){
         $request->validate([
