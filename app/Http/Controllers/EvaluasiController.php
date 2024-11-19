@@ -6,7 +6,7 @@ use App\Models\Evaluasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class evaluasiController extends Controller
+class EvaluasiController extends Controller
 {
     public function index()
     {
