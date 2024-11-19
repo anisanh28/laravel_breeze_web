@@ -6,6 +6,7 @@ use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\MateriController;
 use App\Http\Controllers\SubmateriController;
 use App\Http\Controllers\JawabWarmUpController;
+use App\Http\Controllers\PertanyaanController;
 use App\Http\Controllers\EvaluasiController;
 use Illuminate\Support\Facades\Route;
 
@@ -73,6 +74,12 @@ Route::middleware(['auth', 'guru'])->group(function () {
     Route::put('/evaluasi/{evaluasi}', [EvaluasiController::class, 'update'])->name('evaluasi.update');
     Route::delete('/evaluasi/{evaluasi}', [EvaluasiController::class, 'destroy'])->name('evaluasi.destroy');
 
+    Route::get('{evaluasi_id}/pertanyaan', [PertanyaanController::class, 'index'])->name('pertanyaan.index');
+    Route::get('{evaluasi_id}/pertanyaan/create', [PertanyaanController::class,'create'])->name('pertanyaan.create');
+    Route::post('{evaluasi_id}/pertanyaan}', [PertanyaanController::class, 'store'])->name('pertanyaan.store'); // Menyimpan materi
+    Route::get('/pertanyaan/{id}/edit', [PertanyaanController::class, 'edit'])->name('pertanyaan.edit');
+    Route::put('/pertanyaan/{id}', [PertanyaanController::class, 'update'])->name('pertanyaan.update');
+    Route::delete('/pertanyaan/{id}', [PertanyaanController::class, 'destroy'])->name('pertanyaan.destroy');
 
 });
 
