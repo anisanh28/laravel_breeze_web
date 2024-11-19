@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('pertanyaans', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('evaluasi_id');
-            $table->foreign('evaluasi_id')->references('id')->on('evaluasi')->onDelete('cascade');
+            $table->foreign('evaluasi_id')->references('id')->on('evaluasis')->onDelete('cascade');
             $table->string('pertanyaan');
             $table->string('file')->nullable();
             $table->timestamps();
