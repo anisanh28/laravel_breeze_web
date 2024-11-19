@@ -6,6 +6,7 @@ use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\MateriController;
 use App\Http\Controllers\SubmateriController;
 use App\Http\Controllers\JawabWarmUpController;
+use App\Http\Controllers\EvaluasiController;
 use Illuminate\Support\Facades\Route;
 
 // Halaman utama dan Tentang Kami
@@ -48,7 +49,9 @@ Route::middleware(['auth', 'siswa'])->group(function () {
 Route::middleware(['auth', 'guru'])->group(function () {
     Route::get('/guru/dashboard', [GuruController::class, 'index'])->name('guru.dashboard');
     Route::get('/guru/anggota', [GuruController::class, 'anggota'])->name('guru.anggota');
-    Route::get('/guru/materi', [MateriController::class, 'index'])->name('guru.materi'); // Akses materi untuk guru
+    Route::get('/guru/materi', [MateriController::class, 'index'])->name('guru.materi'); 
+    Route::get('/guru/evaluasi', [EvaluasiController::class, 'index'])->name('guru.evaluasi'); 
+
     Route::get('/materi/create', [MateriController::class, 'create'])->name('materi.create'); // Form untuk membuat materi
     Route::post('/materi', [MateriController::class, 'store'])->name('materi.store'); // Menyimpan materi
     Route::get('/materi/{materi}/edit', [MateriController::class, 'edit'])->name('materi.edit'); // Form untuk edit materi
@@ -64,6 +67,7 @@ Route::middleware(['auth', 'guru'])->group(function () {
 
     Route::get('/jawaban-warm-up/{submateri_id}', [JawabWarmUpController::class, 'index'])->name('jawabWarmUp.index');
 
+    Route::get('/evaluasi/create', [EvaluasiController::class, 'create'])->name('evaluasi.create'); // Form untuk membuat materi
     // Route::get('/soal-warm-up/{submateri_id}', [SoalWarmUpController::class, 'index'])->name('soalWarmUp.index');
     // Route::get('/soal-warm-up/create/{submateri_id}', [SoalWarmUpController::class, 'create'])->name('soalWarmUp.create');
 
