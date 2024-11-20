@@ -22,7 +22,7 @@ Route::get('/tentangkami', function () {
 Route::resource('materi', MateriController::class);
 Route::resource('submateri', SubmateriController::class);
 Route::resource('jawabanWarmUp', JawabWarmUpController::class);
-
+Route::resource('pertanyaan', PertanyaanController::class);
 
 // Middleware untuk autentikasi
 Route::middleware('auth')->group(function () {
@@ -43,6 +43,8 @@ Route::middleware(['auth', 'siswa'])->group(function () {
     Route::post('/jawaban-warm-up', [JawabWarmUpController::class, 'store'])->name('jawabanWarmUp.store');
     Route::get('/jawaban-warm-up/{id}', [JawabWarmUpController::class, 'show'])->name('jawabanWarmUp.show');
     Route::delete('/jawaban-warm-up/{id}', [JawabWarmUpController::class, 'destroy'])->name('jawabanWarmUp.destroy');
+
+    Route::get('/evaluasi', [EvaluasiController::class, 'index'])->name('evaluasi.index');
 
 });
 

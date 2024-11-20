@@ -54,8 +54,7 @@ class EvaluasiController extends Controller
     public function show($id)
     {
         $evaluasi = Evaluasi::with('pertanyaan.opsi')->findOrFail($id);
-
-         $pertanyaan = $evaluasi->pertanyaan;
+        $pertanyaan = $evaluasi->pertanyaan;
 
     return view('evaluasi.show', compact('evaluasi', 'pertanyaan'));
 }
