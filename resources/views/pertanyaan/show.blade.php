@@ -1,4 +1,3 @@
-<!-- resources/views/pertanyaan/show.blade.php -->
 <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-6">
     <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">{{ $pertanyaan->pertanyaan }}</h3>
 

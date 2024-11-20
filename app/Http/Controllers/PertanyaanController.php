@@ -83,8 +83,21 @@ class PertanyaanController extends Controller
 
     public function show(Evaluasi $evaluasi)
     {
-        $pertanyaan = Pertanyaan::where('evaluasi_id', $evaluasi->id)->get();
-        return view('pertanyaan.show', compact('evaluasi', 'pertanyaan'));
+        $user = Auth::user();
+        // $pertanyaan = Pertanyaan::where('evaluasi_id', $evaluasi->id)->get();
+
+        if($user->role === 'guru'){
+            $pertanyaan = Pertanyaan::where('evaluasi_id', $evaluasi->id)->get();
+
+            return view('pertanyaan.show', compact('evaluasi', 'pertanyaan'));
+        }
+
+        if($user->role === 'siswa'){
+            $pertanyaan = Pertanyaan::where('evaluasi_id', $evaluasi->id)->get();
+
+            return view('siswa.pengerjaan', compact('evaluasi', 'pertanyaan'));
+        }
+        return redirect()->route('login')->with('error','Anda tidak memiliki izin untuk mengakses halaman ini.');
     }
 
     public function edit($id)
@@ -104,6 +117,10 @@ class PertanyaanController extends Controller
             'status' => 'required|array',
             'opsi.*' => 'required|string',
             'status.*' => 'required|in:0,1',
+            'opsi.new' => 'nullable|array',
+            'opsi.new.*' => 'required|string',
+            'status.new' => 'nullable|array',
+            'status.new.*' => 'required|in:0,1',
         ]);
 
         // Update pertanyaan
@@ -121,10 +138,12 @@ class PertanyaanController extends Controller
         // Update atau hapus opsi lama
         if ($request->has('opsi')) {
             foreach ($request->opsi as $opsiId => $opsiText) {
-                $opsi = Opsi::findOrFail($opsiId);
-                $opsi->opsi = $opsiText;
-                $opsi->status = $request->status[$opsiId];
-                $opsi->save();
+                if (is_numeric($opsiId)) { // Pastikan hanya opsi lama yang diproses
+                    $opsi = Opsi::findOrFail($opsiId);
+                    $opsi->opsi = $opsiText;
+                    $opsi->status = $request->status[$opsiId];
+                    $opsi->save();
+                }
             }
         }
 
@@ -135,7 +154,7 @@ class PertanyaanController extends Controller
                     Opsi::create([
                         'pertanyaan_id' => $pertanyaan->id,
                         'opsi' => $newOpsi,
-                        'status' => $request->status['new'][$index] ?? 0, // Status default 0 jika tidak ada
+                        'status' => $request->status['new'][$index] ?? 0,
                     ]);
                 }
             }

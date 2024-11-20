@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-4">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <h3 class="text-2xl font-bold mb-4">{{ $evaluasi->judul_evaluasi}}</h3>
+                    <h3 class="text-2xl font-bold mb-4">{{ $evaluasi->judul_evaluasi }}</h3>
                     <p class="text-gray-700 dark:text-gray-300 mb-6">
                         <span class="font-semibold">Deskripsi:</span>
                         {{ $evaluasi->deskripsi_evaluasi }}
@@ -22,10 +22,17 @@
                         <span class="font-semibold">Waktu Selesai:</span>
                         {{ \Carbon\Carbon::parse($evaluasi->end_time)->format('d M Y H:i') }}
                     </p>
-                    <p class="text-gray-700 dark:text-gray-300 mb-4">
-                        <span class="font-semibold">Durasi:</span>
-                        {{ $evaluasi->durasi }}
-                    </p>
+                    @php
+                        list($jam, $menit, $detik) = explode(":", $evaluasi->durasi);
+                        $durasi_in_minutes = (intval($jam) * 60) + intval($menit) + (intval($detik) / 60);
+                    @endphp
+                    <p><strong class="font-semibold">Durasi:</strong> {{ round($durasi_in_minutes) }} menit</p>
+
+                    <div class="mt-6">
+                        <a href="{{ route('pertanyaan.show', $evaluasi->id) }}" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">
+                            Mulai
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

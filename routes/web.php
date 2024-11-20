@@ -22,6 +22,7 @@ Route::get('/tentangkami', function () {
 Route::resource('materi', MateriController::class);
 Route::resource('submateri', SubmateriController::class);
 Route::resource('jawabanWarmUp', JawabWarmUpController::class);
+Route::resource('evaluasi', EvaluasiController::class);
 Route::resource('pertanyaan', PertanyaanController::class);
 
 // Middleware untuk autentikasi
@@ -45,6 +46,9 @@ Route::middleware(['auth', 'siswa'])->group(function () {
     Route::delete('/jawaban-warm-up/{id}', [JawabWarmUpController::class, 'destroy'])->name('jawabanWarmUp.destroy');
 
     Route::get('/evaluasi', [EvaluasiController::class, 'index'])->name('evaluasi.index');
+    Route::get('/evaluasi/{id}', [EvaluasiController::class, 'show'])->name('evaluasi.show');
+
+    Route::get('/pertanyaan/{evaluasi}', [PertanyaanController::class, 'show'])->name('pertanyaan.show');
 
 });
 

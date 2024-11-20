@@ -51,13 +51,22 @@ class EvaluasiController extends Controller
         return redirect()->route('guru.evaluasi')->with('success', 'Evaluasi berhasil ditambahkan!');
     }
 
-    public function show($id)
-    {
-        $evaluasi = Evaluasi::with('pertanyaan.opsi')->findOrFail($id);
-        $pertanyaan = $evaluasi->pertanyaan;
+    public function show($id){
 
-    return view('evaluasi.show', compact('evaluasi', 'pertanyaan'));
-}
+    $user = Auth::user();
+    $evaluasi = Evaluasi::with('pertanyaan.opsi')->findOrFail($id);
+
+    if ($user->role === 'guru') {
+        $pertanyaan = $evaluasi->pertanyaan;
+        return view('evaluasi.show', compact('evaluasi', 'pertanyaan'));
+    }
+
+    if ($user->role === 'siswa') {
+        $pertanyaan = $evaluasi->pertanyaan;
+        return view('evaluasi.detail', compact('evaluasi', 'pertanyaan'));
+    }
+    return redirect()->route('login')->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+    }
 
 
     public function edit(Evaluasi $evaluasi)

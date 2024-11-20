@@ -12,19 +12,9 @@
                     <div class="space-y-6">
                         @foreach ($evaluasi as $evaluasi)
                             <div class="bg-white dark:bg-gray-700 rounded-lg shadow-lg p-6">
-                                <h3 class="text-2xl font-semibold text-gray-800 dark:text-gray-200">{{ $evaluasi->judul_evaluasi }}</h3>
-
-                                <div class="mt-4 text-sm text-gray-600 dark:text-gray-400">
-                                    <!-- Durasi: Konversi menjadi menit -->
-                                    @php
-                                        // Pecah durasi menjadi array [jam, menit, detik]
-                                        list($jam, $menit, $detik) = explode(":", $evaluasi->durasi);
-
-                                        // Konversi menjadi menit
-                                        $durasi_in_minutes = (intval($jam) * 60) + intval($menit) + (intval($detik) / 60);
-                                    @endphp
-                                    <p><strong class="font-semibold">Durasi:</strong> {{ round($durasi_in_minutes) }} menit</p>
-                                </div>
+                                <a href="{{ route('evaluasi.show', $evaluasi->id) }}" class="text-xl font-semibold text-gray-800 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400">
+                                    {{ $evaluasi->judul_evaluasi }}
+                                </a>
                             </div>
                         @endforeach
                     </div>
