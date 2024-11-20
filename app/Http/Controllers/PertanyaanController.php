@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\Evaluasi;
 use App\Models\Pertanyaan;
+use App\Models\Opsi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -27,35 +28,51 @@ class PertanyaanController extends Controller
     }
 
     public function store(Request $request, $evaluasi_id)
-    {
-    $request->validate([
+{
+    // Validasi input
+    $validated = $request->validate([
         'pertanyaan' => 'required|string',
-        'opsi' => 'required|array|min:2', // Minimum 2 opsi
-        'opsi.*' => 'required|string|max:255',
-        'jawaban_benar' => 'required|integer|min:1',
+        'skor' => 'required|integer',
+        'file' => 'nullable|file|mimes:jpeg,png,pdf,docx,doc|max:10240', // Contoh validasi file
+        'opsi' => 'required|array',
+        'status' => 'required|array',
+        'opsi.*' => 'required|string',
+        'status.*' => 'required|in:0,1', // Memastikan status hanya 0 atau 1
     ]);
 
     // Simpan pertanyaan
     $pertanyaan = new Pertanyaan();
-    $pertanyaan->evaluasi_id = $evaluasi_id;
     $pertanyaan->pertanyaan = $request->pertanyaan;
+    $pertanyaan->skor = $request->skor;
+    $pertanyaan->evaluasi_id = $evaluasi_id;
+
+    // Menangani upload file jika ada
+    if ($request->hasFile('file')) {
+        $path = $request->file('file')->store('uploads', 'public');
+        $pertanyaan->file_path = $path;
+    }
+
     $pertanyaan->save();
 
-    // Simpan opsi
-    foreach ($request->opsi as $index => $opsiText) {
-        $pertanyaan->opsi()->create([
-            'opsi' => $opsiText,
-            'is_benar' => ($index + 1 == $request->jawaban_benar) ? true : false,
-        ]);
+    // Menyimpan opsi
+    foreach ($request->opsi as $index => $opsi) {
+        $opsiModel = new Opsi();
+        $opsiModel->pertanyaan_id = $pertanyaan->id;
+        $opsiModel->opsi = $opsi;
+        $opsiModel->status = $request->status[$index];
+        $opsiModel->save();
     }
 
-    return redirect()->route('evaluasi.show', $evaluasi_id)->with('success', 'Pertanyaan berhasil ditambahkan.');
+    // Redirect atau response sesuai kebutuhan
+    return redirect()->route('pertanyaan.index', $evaluasi_id)->with('success', 'Pertanyaan berhasil ditambahkan');
+}
+
+    public function show(Evaluasi $evaluasi)
+    {
+        $pertanyaan = Pertanyaan::where('evaluasi_id', $evaluasi->id)->get();
+    return view('pertanyaan.show', compact('evaluasi', 'pertanyaan'));
     }
 
-    public function show(Evaluasi $evaluasi, Pertanyaan $pertanyaan){
-
-        return view('pertanyaan.show', compact('evaluasi', 'pertanyaan'));
-    }
 
     public function edit($id){
         $pertanyaan = Pertanyaan::findOrFail($id);

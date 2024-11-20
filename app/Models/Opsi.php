@@ -11,7 +11,8 @@ class Opsi extends Model
     protected $table='opsis';
     protected $fillable=['pertanyaan_id','opsi','status'];
 
-    public function pertanyaan(){
+    public function pertanyaan()
+    {
         return $this->belongsTo(Pertanyaan::class);
     }
 }
