@@ -51,12 +51,15 @@ class EvaluasiController extends Controller
         return redirect()->route('guru.evaluasi')->with('success', 'Evaluasi berhasil ditambahkan!');
     }
 
-    public function show(Evaluasi $evaluasi, $id)
+    public function show($id)
     {
-        $evaluasi = Evaluasi::findOrFail($id);
+        $evaluasi = Evaluasi::with('pertanyaan.opsi')->findOrFail($id);
 
-        return view('evaluasi.show', compact('evaluasi'));
-    }
+         $pertanyaan = $evaluasi->pertanyaan;
+
+    return view('evaluasi.show', compact('evaluasi', 'pertanyaan'));
+}
+
 
     public function edit(Evaluasi $evaluasi)
     {
