@@ -52,6 +52,10 @@ Route::middleware(['auth', 'siswa'])->group(function () {
     Route::get('/evaluasi/{id}', [EvaluasiController::class, 'show'])->name('evaluasi.show');
     Route::get('/pertanyaan/{evaluasi}', [PertanyaanController::class, 'show'])->name('pertanyaan.show');
 
+    Route::post('/submit-evaluasi', [EvaluasiController::class, 'submitEvaluasi'])->name('submitEvaluasi');
+    Route::get('/evaluasi/{evaluasi_id}/hasil', [EvaluasiController::class, 'tampilkanHasil'])->name('evaluasi.tampilkanHasil');
+    Route::get('/evaluasi/hasil/{id}', [EvaluasiController::class, 'showSkor'])->name('evaluasi.showSkor');
+
 });
 
 // Guru Routes (Akses penuh untuk guru)
@@ -82,9 +86,7 @@ Route::middleware(['auth', 'guru'])->group(function () {
     Route::put('/evaluasi/{evaluasi}', [EvaluasiController::class, 'update'])->name('evaluasi.update');
     Route::delete('/evaluasi/{id}', [EvaluasiController::class, 'destroy'])->name('evaluasi.destroy');
     Route::get('/evaluasi/{id}', [EvaluasiController::class, 'show'])->name('evaluasi.show');
-    Route::post('/submit-evaluasi', [EvaluasiController::class, 'submit'])->name('submitEvaluasi');
-    Route::get('/evaluasi/{evaluasi_id}/hasil', [EvaluasiController::class, 'tampilkanHasil'])->name('evaluasi.hasil');
-    Route::get('/evaluasi/hasil/{id}', [EvaluasiController::class, 'showSkor'])->name('evaluasi.hasil');
+
 });
 
 require __DIR__.'/auth.php';

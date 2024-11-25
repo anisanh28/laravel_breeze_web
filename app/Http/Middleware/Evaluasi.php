@@ -23,7 +23,7 @@ class Evaluasi
             }
 
             if (Auth::user()->role === 'siswa') {
-                if (in_array($request->route()->getActionMethod(), ['index', 'show'])) {
+                if (in_array($request->route()->getActionMethod(), ['index', 'show','submitEvaluasi'])) {
                     return $next($request);
                 }
             }

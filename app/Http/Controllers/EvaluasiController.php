@@ -102,9 +102,9 @@ class EvaluasiController extends Controller
         return redirect()->route('guru.evaluasi')->with('success', 'Evaluasi berhasil dihapus!');
     }
 
-    private function hitungSkor($jawaban, $evaluasiId)
+    private function hitungSkor($jawaban, $evaluasi_id)
     {
-        $evaluasi = Evaluasi::find($evaluasiId);
+        $evaluasi = Evaluasi::find($evaluasi_id);
         $skor = 0;
 
         foreach ($evaluasi->pertanyaan as $index => $pertanyaan) {
@@ -116,38 +116,45 @@ class EvaluasiController extends Controller
     }
 
     public function submitEvaluasi(Request $request)
-    {
-        $request->validate([
-            'evaluasi_id' => 'required|exists:evaluasis,id',
-            'jawaban' => 'required|json',
-        ]);
+{
+    $request->validate([
+        'evaluasi_id' => 'required|exists:evaluasis,id',
+        'jawaban' => 'required|json',
+        'waktu_pengerjaan' => 'required|integer|min:0', // Validasi waktu pengerjaan
+    ]);
 
-        // Decode jawaban
-        $jawaban = json_decode($request->input('jawaban'), true);
+    // Decode jawaban
+    $jawaban = json_decode($request->input('jawaban'), true);
 
-        // Cek apakah jawaban valid
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            return redirect()->back()->withErrors('Format jawaban tidak valid.');
-        }
-
-        $skor = $this->hitungSkor($jawaban, $request->input('evaluasi_id'));
-
-        // Simpan hasil evaluasi tanpa menyimpan jawaban
-        $hasilEvaluasi = new HasilEvaluasi();
-        $hasilEvaluasi->evaluasi_id = $request->input('evaluasi_id');
-        $hasilEvaluasi->user_id = Auth::id(); // Menyimpan user_id yang login
-        $hasilEvaluasi->skor = $skor;
-        $hasilEvaluasi->save();
-
-        // Redirect ke halaman hasil evaluasi
-        return redirect()->route('evaluasi.hasil', ['id' => $hasilEvaluasi->id])->with('success', 'Evaluasi berhasil disubmit!');
+    // Check if there is an error in decoding the JSON
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        return response()->json(['error' => 'Format jawaban tidak valid.'], 400);
     }
+
+    // Calculate the score based on the answers
+    $skor = $this->hitungSkor($jawaban, $request->input('evaluasi_id'));
+
+    // Save the evaluation result
+    $hasilEvaluasi = new HasilEvaluasi();
+    $hasilEvaluasi->evaluasi_id = $request->input('evaluasi_id');
+    $hasilEvaluasi->user_id = Auth::id();
+    $hasilEvaluasi->skor = $skor;
+    $hasilEvaluasi->waktu_pengerjaan = $request->input('waktu_pengerjaan'); // Simpan waktu pengerjaan
+    $hasilEvaluasi->save();
+
+    // Return success as JSON
+    return response()->json(['success' => true, 'id' => $hasilEvaluasi->id]);
+}
+
 
     public function showSkor($id)
     {
         $hasilEvaluasi = HasilEvaluasi::with('evaluasi')->findOrFail($id);
 
         // Tampilkan halaman dengan skor hasil evaluasi
-        return view('evaluasi.hasil', compact('hasilEvaluasi'));
+        return view('evaluasi.hasil', [
+            'hasilEvaluasi' => $hasilEvaluasi,
+            'evaluasi' => $hasilEvaluasi->evaluasi, // Pastikan relasi tersedia
+        ]);
     }
 }

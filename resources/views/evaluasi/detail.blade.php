@@ -183,31 +183,60 @@
             });
         });
 
-        // Submit evaluation
-        function submitEvaluasi() {
-            const data = {
-                jawaban: jawaban,
-            };
+        function collectAnswers() {
+            const answers = {};
 
-            fetch("{{ route('submitEvaluasi', $evaluasi->id) }}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify(data),
-            }).then(response => response.json())
-              .then(data => {
-                  if (data.success) {
-                      alert('Evaluasi berhasil disubmit');
-                  } else {
-                      alert('Terjadi kesalahan');
-                  }
-              });
+            // Loop melalui setiap pertanyaan
+            document.querySelectorAll('.pertanyaan').forEach(question => {
+                const questionId = question.querySelector('input[type="radio"]').name.split('_')[1]; // Ambil ID pertanyaan dari nama input
+                const selectedOption = question.querySelector('input[type="radio"]:checked'); // Ambil opsi yang dipilih
+
+                if (selectedOption) {
+                    answers[questionId] = selectedOption.value; // Simpan ID opsi yang dipilih
+                }
+            });
+
+            return answers;
         }
 
+        // Submit evaluation
+        function submitEvaluasi() {
+    // Mengumpulkan jawaban dari form atau elemen tertentu
+    const data = collectAnswers();
 
-        // Submit button
+    // Contoh: Menghitung waktu pengerjaan (dalam detik)
+    const startTime = window.startTime || Date.now(); // Waktu mulai (pastikan diinisialisasi sebelumnya)
+    const endTime = Date.now(); // Waktu saat tombol submit diklik
+    const waktuPengerjaan = Math.floor((endTime - startTime) / 1000); // Konversi ke detik
+
+    fetch("{{ route('submitEvaluasi', $evaluasi->id) }}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({
+            evaluasi_id: {{ $evaluasi->id }},
+            jawaban: JSON.stringify(data),
+            waktu_pengerjaan: waktuPengerjaan // Kirim waktu pengerjaan ke backend
+        }),
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Arahkan ke halaman hasil evaluasi dengan skor
+                const hasilUrl = "{{ route('evaluasi.showSkor', ':id') }}".replace(':id', data.id);
+                window.location.href = hasilUrl;
+            } else {
+                alert('Terjadi kesalahan: ' + (data.error || ''));
+            }
+        })
+        .catch(error => {
+            console.error('Terjadi kesalahan saat mengirim data:', error);
+            alert('Terjadi kesalahan jaringan.');
+        });
+}
+
         submitButton.addEventListener('click', submitEvaluasi);
     </script>
 </x-app-layout>
