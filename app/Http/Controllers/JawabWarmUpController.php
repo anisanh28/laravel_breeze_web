@@ -43,7 +43,10 @@ class JawabWarmUpController extends Controller
 
         $jawabanWarmUp->save();
 
-        return redirect()->route('jawabanWarmUp.index', $request->submateri_id)->with('success', 'Jawaban berhasil dikirim!');
+        return redirect()->route('submateri.show', [
+            'materi' => $jawabanWarmUp->submateri->materi_id, // Adjust this as per your relationships
+            'submateri' => $jawabanWarmUp->submateri_id,
+        ])->with('success', 'Jawaban berhasil diperbarui!');
     }
 
     public function show($submateri_id, $user_id)

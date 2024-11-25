@@ -8,6 +8,7 @@ use App\Http\Controllers\SubmateriController;
 use App\Http\Controllers\JawabWarmUpController;
 use App\Http\Controllers\PertanyaanController;
 use App\Http\Controllers\EvaluasiController;
+use App\Http\Controllers\HasilEvaluasiController;
 use Illuminate\Support\Facades\Route;
 
 // Halaman utama dan Tentang Kami
@@ -25,6 +26,9 @@ Route::resource('jawabanWarmUp', JawabWarmUpController::class);
 Route::resource('evaluasi', EvaluasiController::class);
 Route::resource('pertanyaan', PertanyaanController::class);
 
+Route::middleware('auth')->get('/hasil-evaluasi/{evaluasiId}', [HasilEvaluasiController::class, 'tampilkanHasil'])->name('evaluasi.hasil');
+
+
 // Middleware untuk autentikasi
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -40,14 +44,12 @@ Route::middleware(['auth', 'siswa'])->group(function () {
 
     Route::get('/jawaban-warm-up/create',[JawabWarmUpController::class,'create'])->name('jawabanWarmUp.create');
     Route::get('/jawaban-warm-up/{id}/edit',[JawabWarmUpController::class,'edit'])->name('jawabanWarmUp.edit');
-    Route::patch('/jawaban-warm-up/{id}',[JawabWarmUpController::class,'update'])->name('jawabanWarmUp.update');
+    Route::put('/jawaban-warm-up/{id}',[JawabWarmUpController::class,'update'])->name('jawabanWarmUp.update');
     Route::post('/jawaban-warm-up', [JawabWarmUpController::class, 'store'])->name('jawabanWarmUp.store');
-    Route::get('/jawaban-warm-up/{id}', [JawabWarmUpController::class, 'show'])->name('jawabanWarmUp.show');
+    Route::get('/jawabanWarmUp/{submateri_id}', [JawabWarmUpController::class, 'show'])->name('jawabWarmUp.show');
     Route::delete('/jawaban-warm-up/{id}', [JawabWarmUpController::class, 'destroy'])->name('jawabanWarmUp.destroy');
 
-    Route::get('/evaluasi', [EvaluasiController::class, 'index'])->name('evaluasi.index');
     Route::get('/evaluasi/{id}', [EvaluasiController::class, 'show'])->name('evaluasi.show');
-
     Route::get('/pertanyaan/{evaluasi}', [PertanyaanController::class, 'show'])->name('pertanyaan.show');
 
 });
@@ -72,7 +74,7 @@ Route::middleware(['auth', 'guru'])->group(function () {
     Route::put('/submateri/{id}', [SubmateriController::class, 'update'])->name('submateri.update');
     Route::delete('/submateri/{id}', [SubmateriController::class, 'destroy'])->name('submateri.destroy');
 
-    Route::get('/jawaban-warm-up/{submateri_id}', [JawabWarmUpController::class, 'index'])->name('jawabWarmUp.index');
+    Route::get('/jawabWarmUp/{submateri_id}', [JawabWarmUpController::class, 'index'])->name('jawabWarmUp.index');
 
     Route::get('/evaluasi/create', [EvaluasiController::class, 'create'])->name('evaluasi.create');
     Route::post('/pertanyaan/{evaluasi}', [PertanyaanController::class, 'store'])->name('pertanyaan.store');
@@ -80,14 +82,9 @@ Route::middleware(['auth', 'guru'])->group(function () {
     Route::put('/evaluasi/{evaluasi}', [EvaluasiController::class, 'update'])->name('evaluasi.update');
     Route::delete('/evaluasi/{id}', [EvaluasiController::class, 'destroy'])->name('evaluasi.destroy');
     Route::get('/evaluasi/{id}', [EvaluasiController::class, 'show'])->name('evaluasi.show');
-
-    Route::get('{evaluasi_id}/pertanyaan', [PertanyaanController::class, 'index'])->name('pertanyaan.index');
-    Route::get('{evaluasi_id}/pertanyaan/create', [PertanyaanController::class,'create'])->name('pertanyaan.create');
-    Route::post('{evaluasi_id}/pertanyaan', [PertanyaanController::class, 'store'])->name('pertanyaan.store');
-    Route::get('/pertanyaan/{id}/edit', [PertanyaanController::class, 'edit'])->name('pertanyaan.edit');
-    Route::put('/pertanyaan/{id}', [PertanyaanController::class, 'update'])->name('pertanyaan.update');
-    Route::delete('/pertanyaan/{id}', [PertanyaanController::class, 'destroy'])->name('pertanyaan.destroy');
-
+    Route::post('/submit-evaluasi', [EvaluasiController::class, 'submit'])->name('submitEvaluasi');
+    Route::get('/evaluasi/{evaluasi_id}/hasil', [EvaluasiController::class, 'tampilkanHasil'])->name('evaluasi.hasil');
+    Route::get('/evaluasi/hasil/{id}', [EvaluasiController::class, 'showSkor'])->name('evaluasi.hasil');
 });
 
 require __DIR__.'/auth.php';

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Evaluasi;
+use App\Models\HasilEvaluasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -99,5 +100,54 @@ class EvaluasiController extends Controller
     {
         $evaluasi->delete();
         return redirect()->route('guru.evaluasi')->with('success', 'Evaluasi berhasil dihapus!');
+    }
+
+    private function hitungSkor($jawaban, $evaluasiId)
+    {
+        $evaluasi = Evaluasi::find($evaluasiId);
+        $skor = 0;
+
+        foreach ($evaluasi->pertanyaan as $index => $pertanyaan) {
+            if (isset($jawaban[$index]) && $jawaban[$index] == $pertanyaan->status) {
+                $skor += $pertanyaan->skor; // Skor disesuaikan dengan nilai pertanyaan
+            }
+        }
+        return $skor;
+    }
+
+    public function submitEvaluasi(Request $request)
+    {
+        $request->validate([
+            'evaluasi_id' => 'required|exists:evaluasis,id',
+            'jawaban' => 'required|json',
+        ]);
+
+        // Decode jawaban
+        $jawaban = json_decode($request->input('jawaban'), true);
+
+        // Cek apakah jawaban valid
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return redirect()->back()->withErrors('Format jawaban tidak valid.');
+        }
+
+        $skor = $this->hitungSkor($jawaban, $request->input('evaluasi_id'));
+
+        // Simpan hasil evaluasi tanpa menyimpan jawaban
+        $hasilEvaluasi = new HasilEvaluasi();
+        $hasilEvaluasi->evaluasi_id = $request->input('evaluasi_id');
+        $hasilEvaluasi->user_id = Auth::id(); // Menyimpan user_id yang login
+        $hasilEvaluasi->skor = $skor;
+        $hasilEvaluasi->save();
+
+        // Redirect ke halaman hasil evaluasi
+        return redirect()->route('evaluasi.hasil', ['id' => $hasilEvaluasi->id])->with('success', 'Evaluasi berhasil disubmit!');
+    }
+
+    public function showSkor($id)
+    {
+        $hasilEvaluasi = HasilEvaluasi::with('evaluasi')->findOrFail($id);
+
+        // Tampilkan halaman dengan skor hasil evaluasi
+        return view('evaluasi.hasil', compact('hasilEvaluasi'));
     }
 }

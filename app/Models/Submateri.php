@@ -17,4 +17,8 @@ class Submateri extends Model
     {
         return $this->belongsTo(Materi::class);
     }
+    public function jawabanWarmUp()
+{
+    return $this->hasMany(JawabanWarmUp::class, 'submateri_id');
+}
 }

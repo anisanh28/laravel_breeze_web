@@ -1,41 +1,33 @@
-<div class="w-3/4 mr-8">
-    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-6">
-        <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">{{ $pertanyaan->pertanyaan }}</h3>
+<div class="mb-6 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
+    <p class="text-lg font-semibold text-gray-800 dark:text-gray-100">{{ $pertanyaan->pertanyaan }}</p>
 
-        <p class="text-gray-700 dark:text-gray-300 mb-4"><strong>Skor:</strong> {{ $pertanyaan->skor }}</p>
-
-        <div>
-            <h4 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Opsi:</h4>
-            @foreach($pertanyaan->opsi as $opsi)
-                <div class="mb-2">
-                    <input type="radio" id="opsi_{{ $opsi->id }}" name="opsi_{{ $pertanyaan->id }}" value="{{ $opsi->id }}" disabled>
-                    <label for="opsi_{{ $opsi->id }}" class="ml-2">{{ $opsi->opsi }}</label>
-                </div>
-            @endforeach
+    <!-- Cek jika ada file yang diunggah dan tampilkan -->
+    @if($pertanyaan->file)
+        <div class="mt-4">
+            @if(in_array(pathinfo($pertanyaan->file, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'gif']))
+                <img src="{{ asset('storage/' . $pertanyaan->file) }}" alt="File Gambar" class="max-w-xs mt-2 rounded-md shadow-md">
+            @elseif(in_array(pathinfo($pertanyaan->file, PATHINFO_EXTENSION), ['mp4', 'mov', 'avi']))
+                <video controls class="w-full mt-2 rounded-md shadow-md">
+                    <source src="{{ asset('storage/' . $pertanyaan->file) }}" type="video/{{ pathinfo($pertanyaan->file, PATHINFO_EXTENSION) }}">
+                    Your browser does not support the video tag.
+                </video>
+            @else
+                <iframe src="{{ asset('storage/' . $pertanyaan->file) }}" class="w-full mt-2 rounded-md shadow-md" style="height: 500px;"></iframe>
+            @endif
         </div>
-    </div>
-    {{-- @foreach ($pertanyaan as $index => $pertanyaan)
-        <div class="question bg-white dark:bg-gray-700 rounded-lg shadow-lg p-6 mb-4" style="display: none;">
-            <h4 class="text-xl font-semibold text-gray-800 dark:text-gray-200">{{ $index + 1 }}. {{ $pertanyaan->pertanyaan }}</h4>
+    @endif
 
-            <div class="mt-4 space-y-4">
-                @foreach ($pertanyaan->opsi as $opsi)
-                    <div class="flex items-center">
-                        <input type="radio" id="opsi{{ $opsi->id }}" name="pertanyaan{{ $pertanyaan->id }}" value="{{ $opsi->id }}" class="mr-2">
-                        <label for="opsi{{ $opsi->id }}" class="text-gray-700 dark:text-gray-300">{{ $opsi->opsi }}</label>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    @endforeach --}}
-
-    <!-- Navigasi -->
-    <div class="flex justify-between mt-4">
-        <button id="prev-button" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700" disabled>
-            Previous
-        </button>
-        <button id="next-button" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">
-            Next
-        </button>
-    </div>
+    <ul class="list-none pl-0 mt-2">
+        @foreach($pertanyaan->opsi as $opsi)
+            <li class="text-gray-700 dark:text-gray-300 mt-1">
+                <label>
+                    <input type="radio" name="opsi_{{ $pertanyaan->id }}" value="{{ $opsi->id }}" class="mr-2">
+                    {{ $opsi->opsi }}
+                </label>
+            </li>
+        @endforeach
+        {{-- @if($pertanyaan->isEmpty())
+            <p>Tidak ada pertanyaan tersedia untuk evaluasi ini.</p>
+        @endif --}}
+    </ul>
 </div>

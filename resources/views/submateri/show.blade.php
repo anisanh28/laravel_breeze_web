@@ -39,6 +39,10 @@
                                 </video>
                             @elseif ($fileExtension === 'pdf')
                                 <embed src="{{ asset('storage/' . $submateri->file) }}" type="application/pdf" width="100%" height="500px" />
+                            @elseif (in_array($fileExtension, ['doc', 'docx']))
+                                <iframe src="https://docs.google.com/gview?url={{ urlencode(asset('storage/' . $submateri->file)) }}&embedded=true"
+                                        width="100%" height="500px" frameborder="0">
+                                </iframe>
                             @else
                                 <a href="{{ asset('storage/' . $submateri->file) }}" target="_blank" class="text-indigo-500 hover:underline">
                                     Download {{ strtoupper($fileExtension) }} file
@@ -46,6 +50,7 @@
                             @endif
                         </div>
                     @endif
+
 
                     <div class="text-gray-800 dark:text-gray-200 mb-4 leading-relaxed">
                         {!! nl2br(e($submateri->content)) !!}

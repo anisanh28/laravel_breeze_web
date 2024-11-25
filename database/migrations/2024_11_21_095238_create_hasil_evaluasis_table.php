@@ -11,17 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('jawaban_soal_warm_up', function (Blueprint $table) {
+        Schema::create('hasil_evaluasis', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('submateri_id');
-            $table->foreign('submateri_id')->references('id')->on('submateri')->onDelete('cascade');
-
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
-            $table->string('jawaban');
-            $table->string('file')->nullable();
+            $table->unsignedBigInteger('evaluasi_id');
+            $table->foreign('evaluasi_id')->references('id')->on('evaluasis')->onDelete('cascade');
 
+            $table->integer('skor');
+            $table->integer('waktu_pengerjaan');
             $table->timestamps();
         });
     }
@@ -31,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('jawaban_soal_warm_up');
+        Schema::dropIfExists('hasil_evaluasis');
     }
 };

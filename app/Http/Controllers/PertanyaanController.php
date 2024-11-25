@@ -81,23 +81,21 @@ class PertanyaanController extends Controller
         return redirect()->route('evaluasi.show', $evaluasi_id)->with('success', 'Pertanyaan berhasil ditambahkan');
     }
 
-    public function show(Evaluasi $evaluasi)
+    public function show(Evaluasi $evaluasi, $evaluasi_id)
     {
         $user = Auth::user();
-        // $pertanyaan = Pertanyaan::where('evaluasi_id', $evaluasi->id)->get();
+        $pertanyaan = Pertanyaan::where('evaluasi_id', $evaluasi->id)->get();
 
-        if($user->role === 'guru'){
-            $pertanyaan = Pertanyaan::where('evaluasi_id', $evaluasi->id)->get();
-
-            return view('pertanyaan.show', compact('evaluasi', 'pertanyaan'));
+        if ($user->role === 'guru') {
+            $pertanyaan = $evaluasi->pertanyaan;
+            return view('evaluasi.show', compact('evaluasi', 'pertanyaan'));
         }
 
-        if($user->role === 'siswa'){
-            $pertanyaan = Pertanyaan::where('evaluasi_id', $evaluasi->id)->get();
-
-            return view('siswa.pengerjaan', compact('evaluasi', 'pertanyaan'));
+        if ($user->role === 'siswa') {
+            $pertanyaan = $evaluasi->pertanyaan;
+            return view('evaluasi.detail', compact('evaluasi', 'pertanyaan'));
         }
-        return redirect()->route('login')->with('error','Anda tidak memiliki izin untuk mengakses halaman ini.');
+        return redirect()->route('login')->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
     }
 
     public function edit($id)
@@ -107,62 +105,72 @@ class PertanyaanController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-        // Validasi
-        $request->validate([
-            'pertanyaan' => 'required|string',
-            'skor' => 'required|integer',
-            'file' => 'nullable|file|mimes:jpeg,png,pdf,docx,doc|max:10240',
-            'opsi' => 'required|array',
-            'status' => 'required|array',
-            'opsi.*' => 'required|string',
-            'status.*' => 'required|in:0,1',
-            'opsi.new' => 'nullable|array',
-            'opsi.new.*' => 'required|string',
-            'status.new' => 'nullable|array',
-            'status.new.*' => 'required|in:0,1',
-        ]);
+{
+    // Validasi
+    $request->validate([
+        'pertanyaan' => 'required|string',
+        'skor' => 'required|integer',
+        'file' => 'nullable|file|mimes:jpeg,png,pdf,docx,doc|max:10240',
+        'opsi' => 'required|array',
+        'status' => 'required|array',
+        'opsi.*' => 'required|string',
+        'status.*' => 'required|in:0,1',
+        'opsi.new' => 'nullable|array',
+        'opsi.new.*' => 'required|string',
+        'status.new' => 'nullable|array',
+        'status.new.*' => 'required|in:0,1',
+    ]);
 
-        // Update pertanyaan
-        $pertanyaan = Pertanyaan::findOrFail($id);
-        $pertanyaan->pertanyaan = $request->pertanyaan;
-        $pertanyaan->skor = $request->skor;
+    // Update pertanyaan
+    $pertanyaan = Pertanyaan::findOrFail($id);
+    $pertanyaan->pertanyaan = $request->pertanyaan;
+    $pertanyaan->skor = $request->skor;
 
-        if ($request->hasFile('file')) {
-            $filePath = $request->file('file')->store('uploads', 'public');
-            $pertanyaan->file = $filePath;
-        }
-
-        $pertanyaan->save();
-
-        // Update atau hapus opsi lama
-        if ($request->has('opsi')) {
-            foreach ($request->opsi as $opsiId => $opsiText) {
-                if (is_numeric($opsiId)) { // Pastikan hanya opsi lama yang diproses
-                    $opsi = Opsi::findOrFail($opsiId);
-                    $opsi->opsi = $opsiText;
-                    $opsi->status = $request->status[$opsiId];
-                    $opsi->save();
-                }
-            }
-        }
-
-        // Tambahkan opsi baru
-        if ($request->has('opsi.new')) {
-            foreach ($request->opsi['new'] as $index => $newOpsi) {
-                if (!empty($newOpsi)) {
-                    Opsi::create([
-                        'pertanyaan_id' => $pertanyaan->id,
-                        'opsi' => $newOpsi,
-                        'status' => $request->status['new'][$index] ?? 0,
-                    ]);
-                }
-            }
-        }
-
-        // Redirect ke halaman evaluasi setelah update
-        return redirect()->route('evaluasi.show', $pertanyaan->evaluasi_id)->with('success', 'Pertanyaan berhasil diperbarui!');
+    if ($request->hasFile('file')) {
+        $filePath = $request->file('file')->store('uploads', 'public');
+        $pertanyaan->file = $filePath;
     }
+
+    $pertanyaan->save();
+
+    // Dapatkan semua opsi lama yang terkait dengan pertanyaan ini
+    $existingOpsiIds = $pertanyaan->opsi()->pluck('id')->toArray();
+
+    // Update atau hapus opsi lama
+    $submittedOpsiIds = [];
+    if ($request->has('opsi')) {
+        foreach ($request->opsi as $opsiId => $opsiText) {
+            if (is_numeric($opsiId)) { // Pastikan hanya opsi lama yang diproses
+                $submittedOpsiIds[] = $opsiId;
+                $opsi = Opsi::findOrFail($opsiId);
+                $opsi->opsi = $opsiText;
+                $opsi->status = $request->status[$opsiId];
+                $opsi->save();
+            }
+        }
+    }
+
+    // Hapus opsi yang tidak ada dalam permintaan terbaru
+    $opsiToDelete = array_diff($existingOpsiIds, $submittedOpsiIds);
+    Opsi::destroy($opsiToDelete);
+
+    // Tambahkan opsi baru
+    if ($request->has('opsi.new')) {
+        foreach ($request->opsi['new'] as $index => $newOpsi) {
+            if (!empty($newOpsi)) {
+                Opsi::create([
+                    'pertanyaan_id' => $pertanyaan->id,
+                    'opsi' => $newOpsi,
+                    'status' => $request->status['new'][$index] ?? 0,
+                ]);
+            }
+        }
+    }
+
+    // Redirect ke halaman evaluasi setelah update
+    return redirect()->route('evaluasi.show', $pertanyaan->evaluasi_id)->with('success', 'Pertanyaan berhasil diperbarui!');
+}
+
 
     public function destroy($id)
     {

@@ -16,6 +16,12 @@ class Evaluasi extends Model
     {
         return $this->hasMany(Pertanyaan::class);
     }
+
+    public function hasilEvaluasis()
+    {
+        return $this->hasMany(HasilEvaluasi::class);
+    }
+
 }
 
 
