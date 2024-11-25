@@ -89,6 +89,7 @@
     <script>
         const durasi = {{ $durasi_in_seconds }}; // Total waktu dalam detik
         let timerInterval;
+        let timeRemaining;
         const timerDisplay = document.getElementById('timer-display');
         const questions = document.querySelectorAll('.pertanyaan');
         const questionButtons = document.querySelectorAll('.soal-nomor');
@@ -130,7 +131,7 @@
         }
 
         function startTimer(duration) {
-            let timeRemaining = duration;
+            timeRemaining = duration;
             timerDisplay.textContent = formatTime(timeRemaining);
             timerInterval = setInterval(() => {
                 timeRemaining--;
@@ -205,9 +206,7 @@
     const data = collectAnswers();
 
     // Contoh: Menghitung waktu pengerjaan (dalam detik)
-    const startTime = window.startTime || Date.now(); // Waktu mulai (pastikan diinisialisasi sebelumnya)
-    const endTime = Date.now(); // Waktu saat tombol submit diklik
-    const waktuPengerjaan = Math.floor((endTime - startTime) / 1000); // Konversi ke detik
+    const waktuPengerjaan = durasi - timeRemaining;
 
     fetch("{{ route('submitEvaluasi', $evaluasi->id) }}", {
         method: "POST",

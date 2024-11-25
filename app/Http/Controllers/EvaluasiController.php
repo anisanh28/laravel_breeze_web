@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Evaluasi;
 use App\Models\HasilEvaluasi;
+use App\Models\Pertanyaan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -116,35 +117,59 @@ class EvaluasiController extends Controller
     }
 
     public function submitEvaluasi(Request $request)
-{
-    $request->validate([
-        'evaluasi_id' => 'required|exists:evaluasis,id',
-        'jawaban' => 'required|json',
-        'waktu_pengerjaan' => 'required|integer|min:0', // Validasi waktu pengerjaan
-    ]);
+    {
+        // Validate the request data
+        $request->validate([
+            'evaluasi_id' => 'required|exists:evaluasis,id',
+            'jawaban' => 'required|json',
+            'waktu_pengerjaan' => 'required|integer|min:0', // Validate the time spent
+        ]);
 
-    // Decode jawaban
-    $jawaban = json_decode($request->input('jawaban'), true);
+        // Fetch pertanyaan with options for the given evaluasi_id
+        $pertanyaan = Pertanyaan::with('opsi')->where('evaluasi_id', $request->input('evaluasi_id'))->get();
 
-    // Check if there is an error in decoding the JSON
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        return response()->json(['error' => 'Format jawaban tidak valid.'], 400);
+        // Decode the answers from JSON
+        $jawaban = json_decode($request->input('jawaban'), true);
+
+        // Check for any JSON decoding errors
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return response()->json(['error' => 'Format jawaban tidak valid.'], 400);
+        }
+
+        // Calculate the score based on the provided answers
+        $skor = 0;
+
+        foreach ($pertanyaan as $pertanyaanItem) {
+            // Get the question ID and find the correct option for this question
+            $questionId = $pertanyaanItem->id;
+            $correctOption = $pertanyaanItem->opsi->where('status', 1)->first();
+            // If the correct option is found
+            if ($correctOption) {
+                $correctOptionId = $correctOption->id;
+
+                // Check if an answer exists for this question in the jawaban array
+                if (isset($jawaban[$questionId])) {
+                    $userAnswerId = $jawaban[$questionId];
+
+                    // Compare the user's answer with the correct option
+                    if ($userAnswerId == $correctOptionId) {
+                        $skor = $skor + $pertanyaanItem->skor;
+                    }
+                }
+            }
+        }
+
+        // Save the evaluation result
+        $hasilEvaluasi = new HasilEvaluasi();
+        $hasilEvaluasi->evaluasi_id = $request->input('evaluasi_id');
+        $hasilEvaluasi->user_id = Auth::id();  // The ID of the authenticated user
+        $hasilEvaluasi->skor = $skor;
+        $hasilEvaluasi->waktu_pengerjaan = $request->input('waktu_pengerjaan');  // Store the time spent
+        $hasilEvaluasi->save();
+
+        // Return success response with the result ID
+        return response()->json(['success' => true, 'id' => $hasilEvaluasi->id]);
     }
-
-    // Calculate the score based on the answers
-    $skor = $this->hitungSkor($jawaban, $request->input('evaluasi_id'));
-
-    // Save the evaluation result
-    $hasilEvaluasi = new HasilEvaluasi();
-    $hasilEvaluasi->evaluasi_id = $request->input('evaluasi_id');
-    $hasilEvaluasi->user_id = Auth::id();
-    $hasilEvaluasi->skor = $skor;
-    $hasilEvaluasi->waktu_pengerjaan = $request->input('waktu_pengerjaan'); // Simpan waktu pengerjaan
-    $hasilEvaluasi->save();
-
-    // Return success as JSON
-    return response()->json(['success' => true, 'id' => $hasilEvaluasi->id]);
-}
 
 
     public function showSkor($id)
@@ -152,9 +177,7 @@ class EvaluasiController extends Controller
         $hasilEvaluasi = HasilEvaluasi::with('evaluasi')->findOrFail($id);
 
         // Tampilkan halaman dengan skor hasil evaluasi
-        return view('evaluasi.hasil', [
-            'hasilEvaluasi' => $hasilEvaluasi,
-            'evaluasi' => $hasilEvaluasi->evaluasi, // Pastikan relasi tersedia
+        return view('evaluasi.hasil', ['hasilEvaluasi' => $hasilEvaluasi, 'evaluasi' => $hasilEvaluasi->evaluasi, // Pastikan relasi tersedia
         ]);
     }
 }
