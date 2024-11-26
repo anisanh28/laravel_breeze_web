@@ -9,6 +9,7 @@ use App\Http\Controllers\JawabWarmUpController;
 use App\Http\Controllers\PertanyaanController;
 use App\Http\Controllers\EvaluasiController;
 use App\Http\Controllers\HasilEvaluasiController;
+use App\Http\Controllers\PertemuanController;
 use Illuminate\Support\Facades\Route;
 
 // Halaman utama dan Tentang Kami
@@ -65,6 +66,7 @@ Route::middleware(['auth', 'guru'])->group(function () {
     Route::get('/guru/anggota', [GuruController::class, 'anggota'])->name('guru.anggota');
     Route::get('/guru/materi', [MateriController::class, 'index'])->name('guru.materi');
     Route::get('/guru/evaluasi', [EvaluasiController::class, 'index'])->name('guru.evaluasi');
+    Route::get('/guru/aktifitas', [PertemuanController::class, 'index'])->name('guru.aktifitas');
 
     Route::get('/materi/create', [MateriController::class, 'create'])->name('materi.create'); // Form untuk membuat materi
     Route::post('/materi', [MateriController::class, 'store'])->name('materi.store'); // Menyimpan materi
@@ -87,9 +89,15 @@ Route::middleware(['auth', 'guru'])->group(function () {
     Route::put('/evaluasi/{evaluasi}', [EvaluasiController::class, 'update'])->name('evaluasi.update');
     Route::delete('/evaluasi/{id}', [EvaluasiController::class, 'destroy'])->name('evaluasi.destroy');
     Route::get('/evaluasi/{id}', [EvaluasiController::class, 'show'])->name('evaluasi.show');
-
-
+    
     Route::get('hasilEvaluasi', [HasilEvaluasiController::class, 'index'])->name('hasilEvaluasi.index');
+    
+    Route::get('/pertemuan/create', [pertemuanController::class, 'create'])->name('pertemuan.create');
+    Route::post('/pertemuan', [PertemuanController::class, 'store'])->name('pertemuan.store');
+    Route::get('/pertemuan/{pertemuan}/edit', [PertemuanController::class, 'edit'])->name('pertemuan.edit'); // Form untuk edit materi
+    Route::put('/pertemuan/{pertemuan}', [PertemuanController::class, 'update'])->name('pertemuan.update'); // Update materi
+    Route::delete('/pertemuan/{pertemuan}', [PertemuanController::class, 'destroy'])->name('pertemuan.destroy'); // Menghapus materi
+    
 });
 
 require __DIR__.'/auth.php';

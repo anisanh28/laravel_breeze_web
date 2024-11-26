@@ -26,8 +26,8 @@
                         {{ __('Materi') }}
                     </x-nav-link>
 
-                    <x-nav-link href="/guru/tugas" :active="request()->routeIs('guru.tugas')">
-                        {{ __('Tugas') }}
+                    <x-nav-link href="/guru/aktifitas" :active="request()->routeIs('guru.tugas')">
+                        {{ __('Aktifitas Siswa') }}
                     </x-nav-link>
 
                     <x-nav-link href="/guru/evaluasi" :active="request()->routeIs('guru.evaluasi')">
