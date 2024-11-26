@@ -11,12 +11,11 @@ use Illuminate\Support\Facades\Auth;
 
 class SubmateriController extends Controller
 {
-    //Menampilkan semua submateri
     public function index(Request $request, $materi_id)
     {
         if ($materi_id) {
             $submateri = Submateri::where('materi_id', $materi_id)->get();
-            $materi = Materi::find($materi_id); // Ambil materi berdasarkan materi_id
+            $materi = Materi::find($materi_id); 
         } else {
             $submateri = Submateri::all();
             $materi = null;
@@ -25,7 +24,6 @@ class SubmateriController extends Controller
         return view('submateri.index', compact('submateri', 'materi', 'materi_id'));
     }
 
-    //Menampilkan form untuk membuat submateri baru
     public function create($materi_id)
     {
         $submateri = Submateri::all(); // Example: Retrieve all materi to choose from

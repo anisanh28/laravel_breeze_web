@@ -41,7 +41,7 @@
                         {{ __('Home Activity') }}
                     </x-nav-link>
 
-                    <x-nav-link href="/classroomactivity" :active="request()->routeIs('siswa.tugas')">
+                    <x-nav-link href="/classroomactivity" :active="request()->routeIs('siswa.classroom')">
                         {{ __('Classroom Activity') }}
                     </x-nav-link>
 

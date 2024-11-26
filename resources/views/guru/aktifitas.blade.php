@@ -20,7 +20,7 @@
                         @foreach ($pertemuan as $pertemuanItem)
                             <div class="bg-white dark:bg-gray-600 shadow-lg rounded-lg p-6 flex justify-between items-center">
                                 <!-- Title on the left, now clickable -->
-                                <a href="{{ route('classRoom.show', $pertemuanItem->id) }}" class="text-xl font-semibold text-gray-800 dark:text-gray-200 hover:underline">
+                                <a href="{{ route('aktifitas.index', $pertemuanItem->id) }}" class="text-xl font-semibold text-gray-800 dark:text-gray-200 hover:underline">
                                     {{ $pertemuanItem->judul }}
                                 </a>
                                 

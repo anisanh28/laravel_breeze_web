@@ -43,9 +43,12 @@ class PertemuanController extends Controller
         return redirect()->route('guru.aktifitas')->with('success', 'Pertemuan berhasil ditambahkan!');
     }
 
-    public function show(Pertemuan $petemuan)
+    public function show($id)
     {
-        return view('pertemuan.show', compact('pertemuan'));
+    $pertemuan = Pertemuan::findOrFail($id); // Ambil data pertemuan berdasarkan ID
+    $aktifitas = $pertemuan->aktifitas; // Relasi: Ambil semua aktivitas yang terkait dengan pertemuan
+
+    return view('aktifitas.show', compact('pertemuan', 'aktifitas'));
     }
 
     public function edit(Pertemuan $pertemuan)

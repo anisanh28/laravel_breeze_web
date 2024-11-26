@@ -10,4 +10,9 @@ class Pertemuan extends Model
     use HasFactory;
     protected $table= 'pertemuans';
     protected $fillable = ['judul'];
+
+    public function aktifitas()
+{
+    return $this->hasMany(Aktifita::class);
+}
 }

@@ -10,6 +10,7 @@ use App\Http\Controllers\PertanyaanController;
 use App\Http\Controllers\EvaluasiController;
 use App\Http\Controllers\HasilEvaluasiController;
 use App\Http\Controllers\PertemuanController;
+use App\Http\Controllers\AktifitasController;
 use Illuminate\Support\Facades\Route;
 
 // Halaman utama dan Tentang Kami
@@ -43,6 +44,12 @@ Route::middleware(['auth', 'siswa'])->group(function () {
     Route::get('/materi', [MateriController::class, 'index'])->name('materi.siswa');
     Route::get('/materi/{materi}', action: [MateriController::class, 'show'])->name('materi.show');
     Route::get('/materi/{materi}/submateri/{submateri}', [SubMateriController::class, 'show'])->name('submateri.show');
+
+    Route::get('/classroomactivity', [PertemuanController::class, 'index'])->name('siswa.classroom');
+    // Route::get('/pertemuan/{pertemuan}', action: [PertemuanController::class, 'show'])->name('pertemuan.show');
+    // Route::get('/pertemuan/{id}/aktifitas', [AktifitasController::class, 'show'])->name('aktifitas.show');
+    Route::get('/pertemuan/{id}', [PertemuanController::class, 'show'])->name('pertemuan.show');
+
 
     Route::get('/jawaban-warm-up/create',[JawabWarmUpController::class,'create'])->name('jawabanWarmUp.create');
     Route::get('/jawaban-warm-up/{id}/edit',[JawabWarmUpController::class,'edit'])->name('jawabanWarmUp.edit');
@@ -94,9 +101,16 @@ Route::middleware(['auth', 'guru'])->group(function () {
     
     Route::get('/pertemuan/create', [pertemuanController::class, 'create'])->name('pertemuan.create');
     Route::post('/pertemuan', [PertemuanController::class, 'store'])->name('pertemuan.store');
-    Route::get('/pertemuan/{pertemuan}/edit', [PertemuanController::class, 'edit'])->name('pertemuan.edit'); // Form untuk edit materi
-    Route::put('/pertemuan/{pertemuan}', [PertemuanController::class, 'update'])->name('pertemuan.update'); // Update materi
-    Route::delete('/pertemuan/{pertemuan}', [PertemuanController::class, 'destroy'])->name('pertemuan.destroy'); // Menghapus materi
+    Route::get('/pertemuan/{pertemuan}/edit', [PertemuanController::class, 'edit'])->name('pertemuan.edit'); 
+    Route::put('/pertemuan/{pertemuan}', [PertemuanController::class, 'update'])->name('pertemuan.update'); 
+    Route::delete('/pertemuan/{pertemuan}', [PertemuanController::class, 'destroy'])->name('pertemuan.destroy'); 
+
+    Route::get('{pertemuan_id}/aktifitas', [AktifitasController::class, 'index'])->name('aktifitas.index');
+    Route::get('{pertemuan_id}/aktifitas/create', [AktifitasController::class,'create'])->name('aktifitas.create');
+    Route::post('{pertemuan_id}/aktifitas}', [AktifitasController::class, 'store'])->name('aktifitas.store');
+    Route::get('/aktifitas/{id}/edit', [AktifitasController::class, 'edit'])->name('aktifitas.edit');
+    Route::put('/aktifitas/{id}', [AktifitasController::class, 'update'])->name('aktifitas.update');
+    Route::delete('/aktifitas/{id}', [AktifitasController::class, 'destroy'])->name('aktifitas.destroy');
     
 });
 
