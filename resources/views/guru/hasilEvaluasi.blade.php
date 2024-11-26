@@ -59,8 +59,7 @@
                                 <td class="px-6 py-3 text-sm text-white border-b"></td>
                                 <td class="px-6 py-3 text-sm text-white border-b"></td>
                             </tr>
-                        </tfoot>
-                        
+                        </tfoot>                        
                     </table>
                 </div>
             </div>
