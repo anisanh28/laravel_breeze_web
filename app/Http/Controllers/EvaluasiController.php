@@ -103,19 +103,6 @@ class EvaluasiController extends Controller
         return redirect()->route('guru.evaluasi')->with('success', 'Evaluasi berhasil dihapus!');
     }
 
-    private function hitungSkor($jawaban, $evaluasi_id)
-    {
-        $evaluasi = Evaluasi::find($evaluasi_id);
-        $skor = 0;
-
-        foreach ($evaluasi->pertanyaan as $index => $pertanyaan) {
-            if (isset($jawaban[$index]) && $jawaban[$index] == $pertanyaan->status) {
-                $skor += $pertanyaan->skor; // Skor disesuaikan dengan nilai pertanyaan
-            }
-        }
-        return $skor;
-    }
-
     public function submitEvaluasi(Request $request)
     {
         // Validate the request data

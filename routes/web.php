@@ -25,6 +25,7 @@ Route::resource('submateri', SubmateriController::class);
 Route::resource('jawabanWarmUp', JawabWarmUpController::class);
 Route::resource('evaluasi', EvaluasiController::class);
 Route::resource('pertanyaan', PertanyaanController::class);
+Route::resource('hasilEvaluasi', HasilEvaluasiController::class);
 
 Route::middleware('auth')->get('/hasil-evaluasi/{evaluasiId}', [HasilEvaluasiController::class, 'tampilkanHasil'])->name('evaluasi.hasil');
 
@@ -87,6 +88,7 @@ Route::middleware(['auth', 'guru'])->group(function () {
     Route::delete('/evaluasi/{id}', [EvaluasiController::class, 'destroy'])->name('evaluasi.destroy');
     Route::get('/evaluasi/{id}', [EvaluasiController::class, 'show'])->name('evaluasi.show');
 
+    Route::get('hasilEvaluasi',[HasilEvaluasiController::class, 'index'])->name('hasilEvaluasi.index');
 });
 
 require __DIR__.'/auth.php';

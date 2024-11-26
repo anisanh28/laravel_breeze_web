@@ -9,48 +9,10 @@ use Illuminate\Support\Facades\Auth;
 
 class HasilEvaluasiController extends Controller
 {
-    public function submitEvaluasi(Request $request, $evaluasi_id)
-    {
-        // Ambil jawaban siswa dari request
-        $jawabanSiswa = $request->input('jawaban');
-        $evaluasi = Evaluasi::findOrFail($evaluasi_id);
+    public function index(){
+    // Ambil semua data hasil_evaluasi dengan relasi ke evaluasi dan user
+    $hasilEvaluasi = HasilEvaluasi::with(['evaluasi', 'user'])->get();
 
-        $skor = 0;
-
-        // Hitung skor berdasarkan jawaban siswa
-        foreach ($evaluasi->pertanyaan as $index => $pertanyaan) {
-            if (isset($jawabanSiswa[$index]) && $jawabanSiswa[$index] == $pertanyaan->jawaban_benar) {
-                $skor++;
-            }
-        }
-
-        // Ambil user_id dari pengguna yang sedang login
-        $user_id = Auth::user()->id;
-
-        // Simpan hasil evaluasi ke database
-        HasilEvaluasi::create([
-            'evaluasi_id' => $evaluasi_id,
-            'user_id' => $user_id,
-            'skor' => $skor,
-        ]);
-
-        // Redirect ke halaman hasil evaluasi
-        return redirect()->route('evaluasi.hasil', ['evaluasi_id' => $evaluasi_id]);
+    return view('guru.hasilEvaluasi', compact('hasilEvaluasi'));
     }
-
-    // Method untuk menampilkan hasil evaluasi
-    public function tampilkanHasil($evaluasi_id)
-    {
-        $evaluasi = Evaluasi::findOrFail($evaluasi_id);
-        $user_id = Auth::user()->id;
-
-        // Ambil hasil evaluasi berdasarkan evaluasi_id dan user_id
-        $hasil = HasilEvaluasi::where('evaluasi_id', $evaluasi_id)
-            ->where('user_id', $user_id)
-            ->first();
-
-        // Tampilkan halaman hasil evaluasi
-        return view('evaluasi.hasil', compact('evaluasi', 'hasil'));
-    }
-
 }
