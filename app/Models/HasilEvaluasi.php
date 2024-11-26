@@ -20,4 +20,9 @@ class HasilEvaluasi extends Model
     {
         return $this->belongsTo(Evaluasi::class);
     }
+
+    public function jawabanEvaluasis()
+    {
+        return $this->belongsTo(JawabanEvaluasi::class);
+    }
 }

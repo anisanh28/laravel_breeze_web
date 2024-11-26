@@ -88,7 +88,8 @@ Route::middleware(['auth', 'guru'])->group(function () {
     Route::delete('/evaluasi/{id}', [EvaluasiController::class, 'destroy'])->name('evaluasi.destroy');
     Route::get('/evaluasi/{id}', [EvaluasiController::class, 'show'])->name('evaluasi.show');
 
-    Route::get('hasilEvaluasi',[HasilEvaluasiController::class, 'index'])->name('hasilEvaluasi.index');
+
+    Route::get('hasilEvaluasi', [HasilEvaluasiController::class, 'index'])->name('hasilEvaluasi.index');
 });
 
 require __DIR__.'/auth.php';
