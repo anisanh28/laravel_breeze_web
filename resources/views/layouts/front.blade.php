@@ -21,7 +21,7 @@
     @include('layouts.nav')
     <!--Fonts -->
     @yield('content')
-    @include('layouts.footer')
+    {{-- @include('layouts.footer') --}}
     <!--script -->
     @yield('script')
 </body>

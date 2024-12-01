@@ -10,9 +10,9 @@
 
 @section('style')
     <style>
-        /* Background setup using gradient */
+        /* Background setup using right to left gradient */
         .background-image {
-            background: linear-gradient(to bottom, #c6dfff, #00224e);
+            background: linear-gradient(to left, #4f46e5, #14b8a6 ); /* Gradient from right to left */
             height: 100vh;
             display: flex;
             align-items: center;

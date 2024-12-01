@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+        <h2 class="font-semibold text-xl text-white dark:text-white leading-tight">
             {{ __($evaluasi->judul_evaluasi) }}
         </h2>
     </x-slot>
@@ -28,15 +28,15 @@
                     <p id="durasi" class="font-semibold mb-4"><strong class="font-semibold">Durasi:</strong> {{ round($durasi_in_seconds / 60) }} menit</p>
 
                     <div class="mt-6" id="mulai-btn">
-                        <a href="javascript:void(0);" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700" id="start-evaluasi">
+                        <a href="javascript:void(0);" class="bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-700" id="start-evaluasi">
                             Mulai
                         </a>
                     </div>
 
                     <!-- Kontainer evaluasi -->
-                    <div id="evaluasi-container" class="flex" style="display: none;">
+                    <div id="evaluasi-container" class="flex flex-col lg:flex-row" style="display: none;">
                         <!-- Bagian kiri: Pertanyaan -->
-                        <div class="flex-1 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+                        <div class="flex-1 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-4 lg :mb-0">
                             @foreach($evaluasi->pertanyaan as $index => $pertanyaan)
                                 <div class="pertanyaan" style="display: {{ $index == 0 ? 'block' : 'none' }};">
                                     <p class="font-semibold mb-4">Soal {{ $loop->iteration }}:</p>
@@ -46,17 +46,17 @@
 
                             <!-- Tombol navigasi -->
                             <div class="mt-4 flex justify-between">
-                                <button id="prev-btn" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700" style="display: none;">
+                                <button id="prev-btn" class="bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-700" style="display: none;">
                                     Prev
                                 </button>
-                                <button id="next-btn" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">
+                                <button id="next-btn" class="bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">
                                     Next
                                 </button>
                             </div>
                         </div>
 
                         <!-- Bagian kanan: Timer dan daftar soal -->
-                        <div class="w-1/3 bg-gray-100 dark:bg-gray-700 p-6 rounded-lg shadow-lg ml-4">
+                        <div class="w-full lg:w-1/3 bg-gray-100 dark:bg-gray-700 p-6 rounded-lg shadow-lg ml-0 lg:ml-4">
                             <!-- Timer -->
                             <div id="timer" class="text-center text-lg font-semibold bg-white dark:bg-gray-800 p-4 rounded-lg mb-6 shadow-md">
                                 Sisa Waktu: <span id="timer-display"></span>

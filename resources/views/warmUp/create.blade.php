@@ -16,18 +16,18 @@
                 <input type="hidden" name="submateri_id" value="{{ $submateri->id }}">
                 <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
 
-                <div class="mb-4">
+                <div class="mb-6">
                     <label for="jawaban" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Jawaban:</label>
-                    <textarea id="jawaban" name="jawaban" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600" required></textarea>
+                    <textarea id="jawaban" name="jawaban" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600" required></textarea>
                 </div>
 
-                <div class="mb-4">
+                <div class="mb-6">
                     <label for="file" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Upload File (optional):</label>
                     <input type="file" id="file" name="file" class="mt-1 block w-full text-sm text-gray-700 dark:text-gray-300 dark:bg-gray-700 dark:border-gray-600">
                 </div>
 
                 <div class="mb-4">
-                    <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         Kirim Jawaban
                     </button>
                 </div>

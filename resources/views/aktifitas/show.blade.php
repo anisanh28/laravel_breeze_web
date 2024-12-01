@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+        <h2 class="font-semibold text-xl text-white dark:text-white leading-tight">
             {{ __($pertemuan->judul) }}
         </h2>
     </x-slot>
@@ -11,11 +11,11 @@
                 @if($aktifitas && $aktifitas->isNotEmpty())
                     @foreach($aktifitas as $aktifitasItem)
                         <!-- Single Card -->
-                        <div class="bg-gray-800 text-white rounded-lg shadow-lg p-6">
+                        <div class="bg-white text-black rounded-lg shadow-lg p-6">
                             <!-- Title and Description -->
-                            <h3 class="text-2xl font-semibold mb-2">{{ $aktifitasItem->judulAktifitas }}</h3>
-                            <p class="text-lg text-gray-300 mb-2">{!! nl2br(e($aktifitasItem->deskripsi)) !!}</p>
-                            
+                            <h3 class="text-xl font-semibold mb-2">{{ $aktifitasItem->judulAktifitas }}</h3>
+                            <p class="text-medium text-black mb-2">{!! nl2br(e($aktifitasItem->deskripsi)) !!}</p>
+
                             <!-- File Preview -->
                             @if($aktifitasItem->file)
                                 <div class="flex items-start mb-4">
@@ -25,7 +25,7 @@
 
                                     @if(in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif']))
                                         <!-- Image Preview -->
-                                        <img src="{{ asset('storage/' . $aktifitasItem->file) }}" alt="Preview Image" class="rounded-lg max-w-xs mr-4">
+                                        <img src="{{ asset('storage/' . $aktifitasItem->file) }}" alt="Preview Image" class="rounded-lg max-w-full sm:max-w-xs mr-4">
                                     @elseif(in_array($fileExtension, ['mp4', 'webm', 'ogg']))
                                         <!-- Video Preview -->
                                         <video controls class="w-full max-w-[200px] rounded-lg">
@@ -47,12 +47,12 @@
                                             Lihat File
                                         </a>
                                     @endif
-                                  
+
                                 </div>
                             @endif
 
                             <!-- Instructions -->
-                            <p class="text-lg text-gray-300 mb-4">{!! nl2br(e($aktifitasItem->intruksi)) !!}</p>
+                            <p class="text-medium text-black mb-4">{!! nl2br(e($aktifitasItem->intruksi)) !!}</p>
                         </div>
                     @endforeach
                 @else
