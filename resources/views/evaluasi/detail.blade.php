@@ -107,6 +107,21 @@
             const secs = seconds % 60;
             return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
+        function checkEndTime() {
+            const startTime = new Date('{{ \Carbon\Carbon::parse($evaluasi->start_time)->format('Y-m-d H:i:s') }}').getTime();
+            const endTime = new Date('{{ \Carbon\Carbon::parse($evaluasi->end_time)->format('Y-m-d H:i:s') }}').getTime();
+            const now = new Date().getTime();
+
+            if (now < startTime) {
+                alert("Evaluasi belum dimulai!");
+                return false;
+            }
+            if (now > endTime) {
+                alert("Waktu pengerjaan telah selesai!");
+                return false;
+            }
+            return true;
+        }
 
         // Update question display
         function updateQuestionDisplay() {
@@ -145,6 +160,7 @@
         }
 
         document.getElementById("start-evaluasi").addEventListener("click", function() {
+            if (!checkEndTime()) return;
             document.getElementById("deskripsi").style.display = "none";
             document.getElementById("waktu-mulai").style.display = "none";
             document.getElementById("waktu-selesai").style.display = "none";
@@ -202,40 +218,37 @@
 
         // Submit evaluation
         function submitEvaluasi() {
-    // Mengumpulkan jawaban dari form atau elemen tertentu
-    const data = collectAnswers();
+            const data = collectAnswers();
+            const waktuPengerjaan = durasi - timeRemaining;
 
-    // Contoh: Menghitung waktu pengerjaan (dalam detik)
-    const waktuPengerjaan = durasi - timeRemaining;
-
-    fetch("{{ route('submitEvaluasi', $evaluasi->id) }}", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: JSON.stringify({
-            evaluasi_id: {{ $evaluasi->id }},
-            jawaban: JSON.stringify(data),
-            waktu_pengerjaan: waktuPengerjaan // Kirim waktu pengerjaan ke backend
-        }),
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Arahkan ke halaman hasil evaluasi dengan skor
-                const hasilUrl = "{{ route('evaluasi.showSkor', ':id') }}".replace(':id', data.id);
-                window.location.href = hasilUrl;
-            } else {
-                alert('Terjadi kesalahan: ' + (data.error || ''));
-            }
-        })
-        .catch(error => {
-            console.error('Terjadi kesalahan saat mengirim data:', error);
-            alert('Terjadi kesalahan jaringan.');
-        });
+            fetch("{{ route('submitEvaluasi', $evaluasi->id) }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    evaluasi_id: {{ $evaluasi->id }},
+                    jawaban: JSON.stringify(data),
+                    waktu_pengerjaan: waktuPengerjaan // Kirim waktu pengerjaan ke backend
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Arahkan ke halaman hasil evaluasi dengan skor
+                    const hasilUrl = "{{ route('evaluasi.showSkor', ':id') }}".replace(':id', data.id);
+                    window.location.href = hasilUrl;
+                } else {
+                    alert('Terjadi kesalahan: ' + (data.error || ''));
+                }
+            })
+            .catch(error => {
+                console.error('Terjadi kesalahan saat mengirim data:', error);
+                alert('Terjadi kesalahan jaringan.');
+            });
 }
 
-        submitButton.addEventListener('click', submitEvaluasi);
+            submitButton.addEventListener('click', submitEvaluasi);
     </script>
 </x-app-layout>

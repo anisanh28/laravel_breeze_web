@@ -59,23 +59,41 @@ class EvaluasiController extends Controller
     }
 
     // Show the details of an evaluation
-    public function show($id)
-    {
-        $user = Auth::user();
-        $evaluasi = Evaluasi::with('pertanyaan.opsi')->findOrFail($id);
+    // Show the details of an evaluation
+public function show($id)
+{
+    $user = Auth::user();
+    $evaluasi = Evaluasi::with('pertanyaan.opsi')->findOrFail($id);
 
-        if ($user->role === 'guru') {
-            $pertanyaan = $evaluasi->pertanyaan;
-            return view('evaluasi.show', compact('evaluasi', 'pertanyaan'));
-        }
+    // Check if the user has already submitted the evaluation
+    $hasSubmitted = HasilEvaluasi::where('evaluasi_id', $id)
+                                ->where('user_id', $user->id)
+                                ->exists();
 
-        if ($user->role === 'siswa') {
-            $pertanyaan = $evaluasi->pertanyaan;
-            return view('evaluasi.detail', compact('evaluasi', 'pertanyaan'));
-        }
+    if ($hasSubmitted) {
+        // Redirect to the result page if the user has already submitted the evaluation
+        $hasilEvaluasi = HasilEvaluasi::where('evaluasi_id', $id)
+                                    ->where('user_id', $user->id)
+                                    ->first();
 
-        return redirect()->route('login')->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        return redirect()->route('evaluasi.showSkor', ['id' => $hasilEvaluasi->id]);
     }
+
+    // If user is a teacher
+    if ($user->role === 'guru') {
+        $pertanyaan = $evaluasi->pertanyaan;
+        return view('evaluasi.show', compact('evaluasi', 'pertanyaan'));
+    }
+
+    // If user is a student
+    if ($user->role === 'siswa') {
+        $pertanyaan = $evaluasi->pertanyaan;
+        return view('evaluasi.detail', compact('evaluasi', 'pertanyaan'));
+    }
+
+    return redirect()->route('login')->with('error', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+}
+
 
     // Show the form to edit an evaluation
     public function edit(Evaluasi $evaluasi)
@@ -182,11 +200,12 @@ class EvaluasiController extends Controller
     // Show the score of an evaluation result
     public function showSkor($id)
     {
+        $pertanyaan = Pertanyaan::with('opsi')->get();
         $hasilEvaluasi = HasilEvaluasi::with('evaluasi')->findOrFail($id);
 
         return view('evaluasi.hasil', [
             'hasilEvaluasi' => $hasilEvaluasi,
-            'evaluasi' => $hasilEvaluasi->evaluasi, // Ensure the relationship is loaded
+            'evaluasi' => $hasilEvaluasi->evaluasi,
         ]);
     }
 }

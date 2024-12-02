@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-white dark:text-gray-200 leading-tight">
-            {{ __('Hasil Evaluasi: ' . $evaluasi->judul_evaluasi) }}
+            {{ __('Hasil Evaluasi: ') }}
         </h2>
     </x-slot>
 
@@ -24,22 +24,26 @@
                             <tr class="bg-indigo-600 text-white">
                                 <th class="px-6 py-3 text-left text-sm font-semibold border-b">No</th>
                                 <th class="px-6 py-3 text-left text-sm font-semibold border-b">Nama Pertanyaan</th>
-                                <th class="px-6 py-3 text-left text-sm font-semibold border-b">Jawaban</th>
-                                <th class="px-6 py-3 text-left text-sm font-semibold border-b">Status</th>
+                                <th class="px-6 py-3 text-left text-sm font-semibold border-b">Jawaban Anda</th>
                             </tr>
                         </thead>
+
+
                         <tbody>
                             @foreach ($evaluasi->pertanyaan as $index => $pertanyaan)
                                 <tr class="hover:bg-gray-100 dark:hover:bg-gray-700">
                                     <td class="px-6 py-3 text-sm border-b">{{ $loop->iteration }}</td>
-                                    <td class="px-6 py-3 text-sm border-b">{{ $pertanyaan->judul }}</td>
-                                    <td class="px-6 py-3 text-sm border-b">{{ $hasilEvaluasi->jawaban[$pertanyaan->id] ?? '-' }}</td>
+                                    <td class="px-6 py-3 text-sm border-b">{{ $pertanyaan->pertanyaan }}</td>
+                                    @php
+                                        // Decode JSON string to associative array
+                                        $jawabanDecoded = json_decode($hasilEvaluasi->jawaban, true);
+
+                                        // Fetch the user's answer for the current question
+                                        // If the answer is not found, use '-' as a fallback
+                                        $userAnswer = $jawabanDecoded[$loop->iteration] ?? '-';
+                                    @endphp
                                     <td class="px-6 py-3 text-sm border-b">
-                                        @if ($hasilEvaluasi->jawaban[$pertanyaan->id] == $pertanyaan->jawaban_benar)
-                                            <span class="text-green-500">Benar</span>
-                                        @else
-                                            <span class="text-red-500">Salah</span>
-                                        @endif
+                                        {{ $userAnswer }}
                                     </td>
                                 </tr>
                             @endforeach

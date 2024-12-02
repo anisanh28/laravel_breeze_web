@@ -5,20 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class HasilEvaluasi extends Model
+class lembarKerja extends Model
 {
     use HasFactory;
-    protected $table = 'hasil_evaluasis';
-    protected $fillable = ['user_id','evaluasi_id','skor','waktu_pengerjaan'];
+
+    protected $table = 'lembar_kerjas';
+    protected $fillable = ['user_id','aktifitas_id','lembar_kerja','lampiran'];
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    public function evaluasi()
+    public function aktifitas()
     {
-        return $this->belongsTo(Evaluasi::class);
+        return $this->belongsTo(Aktifita::class);
     }
 
 }
