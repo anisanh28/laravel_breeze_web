@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Evaluasi;
 use App\Models\HasilEvaluasi;
 use App\Models\Pertanyaan;
+use App\Models\Opsi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -49,11 +50,11 @@ class EvaluasiController extends Controller
         Evaluasi::create([
             'judul_evaluasi' => $request->judul_evaluasi,
             'deskripsi_evaluasi' => $request->deskripsi_evaluasi,
-            'start_time' => $request->start_time,
-            'end_time' => $request->end_time,
+            'start_time' => Carbon::parse($request->start_time)->setTimezone('Asia/Jakarta'),
+            'end_time' => Carbon::parse($request->end_time)->setTimezone('Asia/Jakarta'),
             'durasi' => $request->durasi,
         ]);
-        
+
         return redirect()->route('guru.evaluasi')->with('success', 'Evaluasi berhasil ditambahkan!');
     }
 
@@ -96,8 +97,8 @@ class EvaluasiController extends Controller
         $evaluasi->update([
             'judul_evaluasi' => $request->judul_evaluasi,
             'deskripsi_evaluasi' => $request->deskripsi_evaluasi,
-            'start_time' => $request->start_time,
-            'end_time' => $request->end_time,
+            'start_time' => Carbon::parse($request->start_time)->setTimezone('Asia/Jakarta'),
+            'end_time' => Carbon::parse($request->end_time)->setTimezone('Asia/Jakarta'),
             'durasi' => $request->durasi,
         ]);
 

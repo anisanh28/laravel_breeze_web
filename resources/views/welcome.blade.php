@@ -129,7 +129,7 @@
 
             <!-- Right column for image content -->
             <div class="image-wrapper">
-                <img src="{{ asset('images/tech_image.jpg') }}" alt="Tech Academy Illustration"> <!-- Pastikan path gambar benar -->
+                <img src="{{ asset('images/tech_image.png') }}" alt="Tech Academy Illustration"> <!-- Pastikan path gambar benar -->
             </div>
         </div>
     </div>
