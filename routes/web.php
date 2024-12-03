@@ -47,9 +47,9 @@ Route::middleware(['auth', 'siswa'])->group(function () {
     Route::get('/materi/{materi}/submateri/{submateri}', [SubMateriController::class, 'show'])->name('submateri.show');
 
     Route::get('/classroomactivity', [PertemuanController::class, 'index'])->name('siswa.classroom');
-    // Route::get('/pertemuan/{pertemuan}', action: [PertemuanController::class, 'show'])->name('pertemuan.show');
-    // Route::get('/pertemuan/{id}/aktifitas', [AktifitasController::class, 'show'])->name('aktifitas.show');
     Route::get('/pertemuan/{id}', [PertemuanController::class, 'show'])->name('pertemuan.show');
+    Route::get('aktifitas/{id}', [AktifitasController::class, 'show'])->name('aktifitas.show');
+
 
     Route::get('/jawaban-warm-up/create',[JawabWarmUpController::class,'create'])->name('jawabanWarmUp.create');
     Route::get('/jawaban-warm-up/{id}/edit',[JawabWarmUpController::class,'edit'])->name('jawabanWarmUp.edit');
@@ -71,7 +71,7 @@ Route::middleware(['auth', 'siswa'])->group(function () {
     Route::get('/lembar-kerja/{id}/edit',[LembarKerjaController::class,'edit'])->name('lembarKerja.edit');
     Route::put('/lembar-kerja/{id}',[LembarKerjaController::class,'update'])->name('lembarKerja.update');
     Route::post('/lembar-kerja', [LembarKerjaController::class, 'store'])->name('lembarKerja.store');
-    Route::get('/lembar-kerja/{aktifitas}', [LembarKerjaController::class, 'show'])->name('siswa.lembarKerja');
+    Route::get('/lembar-kerja/{pertemuan}/{aktifitas}', [LembarKerjaController::class, 'show'])->name('lembarKerja.show');
     Route::delete('/lembar-kerja/{id}', [LembarKerjaController::class, 'destroy'])->name('lembarKerja.destroy');
 });
 
@@ -97,6 +97,7 @@ Route::middleware(['auth', 'guru'])->group(function () {
     Route::delete('/submateri/{id}', [SubmateriController::class, 'destroy'])->name('submateri.destroy');
 
     Route::get('/jawabWarmUp/{submateri_id}', [JawabWarmUpController::class, 'index'])->name('jawabWarmUp.index');
+    Route::get('/lembarKerja/{aktifitas_id}', [LembarKerjaController::class, 'index'])->name('lembarKerja.index');
 
     Route::get('/evaluasi/create', [EvaluasiController::class, 'create'])->name('evaluasi.create');
     Route::post('/pertanyaan/{evaluasi}', [PertanyaanController::class, 'store'])->name('pertanyaan.store');

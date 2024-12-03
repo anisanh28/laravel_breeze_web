@@ -16,4 +16,8 @@ class Aktifita extends Model
     {
         return $this->belongsTo(Pertemuan::class);
     }
+    public function lembarKerja()
+    {
+        return $this->hasMany(LembarKerja::class, 'aktifitas_id');
+    }
 }

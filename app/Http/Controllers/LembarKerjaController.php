@@ -55,7 +55,7 @@ class LembarKerjaController extends Controller
         }
 
         // Setelah menyimpan, kembali ke halaman sebelumnya
-        return redirect()->route('siswa.lembarKerja', [
+        return redirect()->route('lembarKerja.show', [
             'pertemuan' => $lembarKerja->aktifitas->pertemuan_id, // Sesuaikan dengan hubungan model Anda
             'aktifitas' => $lembarKerja->aktifitas_id,
         ])->with('success', 'Lembar Kerja berhasil disubmit untuk semua aktivitas!');
@@ -66,7 +66,7 @@ class LembarKerjaController extends Controller
     {
         $pertemuan = Pertemuan::findOrFail($id); // or whatever logic to get Pertemuan
         $aktifitas = Aktifita::with('lembarKerja')->where('pertemuan_id', $pertemuan->id)->get(); // assuming there's a relationship for lembarKerja
-        return view('siswa.lembarKerja', compact('pertemuan', 'aktifitas'));
+        return view('lembarKerja.show', compact('pertemuan', 'aktifitas'));
     }
 
     public function edit($id)

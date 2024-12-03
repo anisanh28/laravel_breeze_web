@@ -23,7 +23,7 @@
                                 <a href="{{ route('aktifitas.index', $pertemuanItem->id) }}" class="text-xl font-semibold text-gray-800 dark:text-gray-200 hover:underline">
                                     {{ $pertemuanItem->judul }}
                                 </a>
-                                
+
                                 <!-- Buttons on the right -->
                                 <div class="flex space-x-4">
                                     <!-- Edit link -->

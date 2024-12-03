@@ -13,7 +13,7 @@ class AktifitasController extends Controller
     {
         if ($pertemuan_id) {
             $aktifitas = Aktifita::where('pertemuan_id', $pertemuan_id)->get();
-            $pertemuan = Pertemuan::find($pertemuan_id); 
+            $pertemuan = Pertemuan::find($pertemuan_id);
         } else {
             $aktifitas = Aktifita::all();
             $materi = null;
@@ -24,7 +24,7 @@ class AktifitasController extends Controller
 
     public function create($pertemuan_id)
     {
-        $submateri = Aktifita::all(); 
+        $submateri = Aktifita::all();
         return view('aktifitas.create', compact( 'pertemuan_id'));
     }
 
@@ -55,7 +55,7 @@ class AktifitasController extends Controller
     public function show($id)
 {
     $pertemuan = Pertemuan::findOrFail($id);
-    $aktifitas = $pertemuan->aktifitas; 
+    $aktifitas = $pertemuan->aktifitas;
 
     return view('aktifitas.show', compact('pertemuan', 'aktifitas'));
 }
@@ -63,7 +63,7 @@ class AktifitasController extends Controller
     public function edit($id)
     {
         $aktifitas = Aktifita ::findOrFail($id);
-        $pertemuan = Pertemuan::all(); 
+        $pertemuan = Pertemuan::all();
         return view('aktifitas.edit', compact('aktifitas', 'pertemuan'));
     }
 
@@ -82,7 +82,7 @@ class AktifitasController extends Controller
     $aktifitas->judulAktifitas = $request->judulAktifitas;
     $aktifitas->deskripsi = $request->deskripsi;
     $aktifitas->intruksi= $request->intruksi;
-    
+
     if ($request->hasFile('file')) {
         $filePath = $request->file('file')->store('uploads', 'public');
         $aktifitas->file = $filePath;

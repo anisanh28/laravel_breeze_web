@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <div class="py-4">
+    {{-- <div class="py-4">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="space-y-6">
                 @if($aktifitas && $aktifitas->isNotEmpty())
@@ -99,5 +99,5 @@
                 @endif
             </div>
         </div>
-    </div>
+    </div> --}}
 </x-app-layout>

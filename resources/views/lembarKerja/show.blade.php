@@ -1,23 +1,17 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-white dark:text-white leading-tight">
-            {{ __('Daftar Aktifitas') }}
+            {{ __($pertemuan->judul) }}
         </h2>
     </x-slot>
 
     <div class="py-4">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <!-- Button to create new submateri -->
-            <a href="{{ route('aktifitas.create', $pertemuan_id)}}" class="inline-block px-6 py-3 bg-orange-600 text-white font-semibold rounded-lg shadow-md hover:bg-orange-700 transition-all duration-300 mb-6">
-                Tambah Aktifitas
-            </a>
-
-            <!-- Cards Container -->
             <div class="space-y-6">
                 @if($aktifitas && $aktifitas->isNotEmpty())
-                    @foreach($aktifitas as $aktifitasItem)
+                    @foreach($aktifitas as $index => $aktifitasItem)
                         <!-- Single Card -->
-                        <div class="bg-white text-black rounded-lg shadow-lg p-6">
+                        <div class="bg-white text-black rounded-lg shadow-lg p-6 mb-4">
                             <!-- Title and Description -->
                             <h3 class="text-xl font-semibold mb-2">{{ $aktifitasItem->judulAktifitas }}</h3>
                             <p class="text-medium text-black mb-2">{!! nl2br(e($aktifitasItem->deskripsi)) !!}</p>
@@ -31,7 +25,7 @@
 
                                     @if(in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif']))
                                         <!-- Image Preview -->
-                                        <img src="{{ asset('storage/' . $aktifitasItem->file) }}" alt="Preview Image" class="rounded-lg max-w-xs mr-4">
+                                        <img src="{{ asset('storage/' . $aktifitasItem->file) }}" alt="Preview Image" class="rounded-lg max-w-full sm:max-w-xs mr-4">
                                     @elseif(in_array($fileExtension, ['mp4', 'webm', 'ogg']))
                                         <!-- Video Preview -->
                                         <video controls class="w-full max-w-[200px] rounded-lg">
@@ -53,27 +47,48 @@
                                             Lihat File
                                         </a>
                                     @endif
-
                                 </div>
                             @endif
 
                             <!-- Instructions -->
                             <p class="text-medium text-black mb-4">{!! nl2br(e($aktifitasItem->intruksi)) !!}</p>
 
-                            <!-- Buttons at the Bottom -->
-                            <div class="flex justify-start space-x-4">
-                                <a href="{{ route('aktifitas.edit', $aktifitasItem->id) }}" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 transition-all duration-300">Edit</a>
-                                <form action="{{ route('aktifitas.destroy', $aktifitasItem->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus aktifitas?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700 transition-all duration-300">Delete</button>
-                                </form>
-
-                                <!-- Button to Record Activity (for students) -->
-                                <a href="{{ route('lembarKerja.index', ['aktifitas_id' => $aktifitasItem->id]) }}" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-300">
-                                    Rekam Aktifitas
-                                </a>
+                            <!-- Display Submitted Jawaban -->
+                            <div class="mb-4">
+                                <label class="block font-semibold">Jawaban:</label>
+                                <p class="text-gray-700">{{ $aktifitasItem->lembarKerja->jawaban ?? 'Tidak ada jawaban' }}</p>
                             </div>
+
+                            <!-- Display Uploaded File -->
+                            @if($aktifitasItem->lembarKerja && $aktifitasItem->lembarKerja->file)
+                                <div class="mb-4">
+                                    <label class="block font-semibold">Lampiran:</label>
+                                    @php
+                                        $uploadedFilePath = $aktifitasItem->lembarKerja->file;
+                                        $fileExtension = pathinfo($uploadedFilePath, PATHINFO_EXTENSION);
+                                    @endphp
+
+                                    @if(in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif']))
+                                        <img src="{{ asset('storage/' . $uploadedFilePath) }}" alt="Uploaded Image" class="rounded-lg max-w-full sm:max-w-xs">
+                                    @elseif(in_array($fileExtension, ['mp4', 'webm', 'ogg']))
+                                        <video controls class="w-full max-w-[200px] rounded-lg">
+                                            <source src="{{ asset('storage/' . $uploadedFilePath) }}" type="video/{{ $fileExtension }}">
+                                            Browser Anda tidak mendukung pemutaran video.
+                                        </video>
+                                    @elseif(in_array($fileExtension, ['mp3', 'wav', 'ogg']))
+                                        <audio controls class="w-full">
+                                            <source src="{{ asset('storage/' . $uploadedFilePath) }}" type="audio/{{ $fileExtension }}">
+                                            Browser Anda tidak mendukung pemutaran audio.
+                                        </audio>
+                                    @elseif($fileExtension === 'pdf')
+                                        <embed src="{{ asset('storage/' . $uploadedFilePath) }}" type="application/pdf" class="w-full h-96 rounded-lg">
+                                    @else
+                                        <a href="{{ asset('storage/' . $uploadedFilePath) }}" class="text-orange-400 hover:text-orange-600 transition-all duration-300">
+                                            Lihat File
+                                        </a>
+                                    @endif
+                                </div>
+                            @endif
                         </div>
                     @endforeach
                 @else
