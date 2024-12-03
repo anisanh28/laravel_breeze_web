@@ -15,8 +15,8 @@ class WaktuAksesController extends Controller
     {
         // Validasi input
         $request->validate([
-            'user_id' => 'required|exists:users,id', 
-            'submateri_id' => 'required|exists:submateri,id', 
+            'user_id' => 'required|exists:users,id',
+            'submateri_id' => 'required|exists:submateri,id',
         ]);
 
         // Menyimpan waktu mulai di session
@@ -26,8 +26,8 @@ class WaktuAksesController extends Controller
         $waktuAkses = new WaktuAkses();
         $waktuAkses->user_id = $request->user_id;
         $waktuAkses->submateri_id = $submateri_id;
-        $waktuAkses->waktu_mulai = Carbon::now(); 
-        $waktuAkses->durasi = 0; 
+        $waktuAkses->waktu_mulai = Carbon::now();
+        $waktuAkses->durasi = 0;
         $waktuAkses->save();
 
         return response()->json(['message' => 'Akses dimulai', 'data' => $waktuAkses], 200);
@@ -38,7 +38,7 @@ class WaktuAksesController extends Controller
     {
         // Mencari waktu akses berdasarkan ID
         $waktuAkses = WaktuAkses::find($waktuAkses_id);
-        
+
         if (!$waktuAkses) {
             return response()->json(['message' => 'Data tidak ditemukan'], 404);
         }
@@ -54,7 +54,7 @@ class WaktuAksesController extends Controller
         $waktuAkses->waktu_selesai = $endTime; // Gunakan waktu sekarang untuk waktu selesai
 
         // Menghitung durasi dalam detik
-        $waktuAkses->durasi = $startTime->diffInSeconds($endTime); 
+        $waktuAkses->durasi = $startTime->diffInSeconds($endTime);
         $waktuAkses->save();
 
         // Menghapus session start_time setelah selesai
@@ -79,7 +79,7 @@ class WaktuAksesController extends Controller
     public function userAkses($user_id)
     {
         $user = User::find($user_id);
-        
+
         if (!$user) {
             return response()->json(['message' => 'User tidak ditemukan'], 404);
         }

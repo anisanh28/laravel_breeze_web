@@ -100,7 +100,6 @@
             @endif
         </div>
     </div>
-
     <script>
         window.onload = function () {
     let waktu_mulai = new Date();
@@ -137,7 +136,6 @@
         });
     });
 };
-
-
     </script>
+
 </x-app-layout>
