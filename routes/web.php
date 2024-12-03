@@ -11,6 +11,7 @@ use App\Http\Controllers\EvaluasiController;
 use App\Http\Controllers\HasilEvaluasiController;
 use App\Http\Controllers\PertemuanController;
 use App\Http\Controllers\AktifitasController;
+use App\Http\Controllers\LembarKerjaController;
 use Illuminate\Support\Facades\Route;
 
 // Halaman utama dan Tentang Kami
@@ -65,6 +66,13 @@ Route::middleware(['auth', 'siswa'])->group(function () {
     Route::get('hasil-evaluasi/{evaluasiId}', [EvaluasiController::class, 'showSkor'])->name('evaluasi.hasil');
     Route::get('/evaluasi/{id}', [EvaluasiController::class, 'show'])->name('evaluasi.show');
     Route::get('/evaluasi/hasil/{id}', [EvaluasiController::class, 'showSkor'])->name('evaluasi.showSkor');
+
+    Route::get('/lembar-kerja/create',[LembarKerjaController::class,'create'])->name('lembarKerja.create');
+    Route::get('/lembar-kerja/{id}/edit',[LembarKerjaController::class,'edit'])->name('lembarKerja.edit');
+    Route::put('/lembar-kerja/{id}',[LembarKerjaController::class,'update'])->name('lembarKerja.update');
+    Route::post('/lembar-kerja', [LembarKerjaController::class, 'store'])->name('lembarKerja.store');
+    Route::get('/lembar-kerja/{aktifitas}', [LembarKerjaController::class, 'show'])->name('siswa.lembarKerja');
+    Route::delete('/lembar-kerja/{id}', [LembarKerjaController::class, 'destroy'])->name('lembarKerja.destroy');
 });
 
 // Guru Routes (Akses penuh untuk guru)
