@@ -50,7 +50,6 @@
                         </div>
                     @endif
 
-
                     <div class="text-gray-800 dark:text-gray-200 mb-4 leading-relaxed">
                         {!! nl2br(e($submateri->content)) !!}
                     </div>
@@ -99,7 +98,46 @@
                 <!-- Jika belum menjawab -->
                 @include('warmUp.create', ['submateri' => $submateri])
             @endif
-
         </div>
     </div>
+
+    <script>
+        window.onload = function () {
+    let waktu_mulai = new Date();
+    let waktu_selesai = null;
+
+    // Menghitung waktu akses saat keluar halaman
+    window.addEventListener("beforeunload", function () {
+        waktu_selesai = new Date();
+        let duration = Math.round((waktu_selesai - waktu_mulai) / 1000);  // Durasi dalam detik
+
+        fetch('/waktu-akses', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            },
+            body: JSON.stringify({
+                waktu_mulai: waktu_mulai.toISOString(),
+                waktu_selesai: waktu_selesai.toISOString(),
+                durasi: duration,
+                submateri_id: {{ $submateri->id }},
+                user_id: {{ Auth::id() }}
+            })
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log('Waktu akses berhasil disimpan.');
+            } else {
+                console.error('Gagal menyimpan waktu akses. Status:', response.status);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+};
+
+
+    </script>
 </x-app-layout>

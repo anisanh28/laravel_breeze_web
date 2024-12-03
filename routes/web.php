@@ -12,6 +12,7 @@ use App\Http\Controllers\HasilEvaluasiController;
 use App\Http\Controllers\PertemuanController;
 use App\Http\Controllers\AktifitasController;
 use App\Http\Controllers\LembarKerjaController;
+use App\Http\Controllers\WaktuAksesController;
 use Illuminate\Support\Facades\Route;
 
 // Halaman utama dan Tentang Kami
@@ -22,6 +23,16 @@ Route::get('/tentangkami', function () {
     return view('tentangkami');
 });
 
+// Route::post('/mulai-akses/{submateri_id}', [WaktuAksesController::class, 'mulaiAkses'])->name('waktuAkses.mulai');
+// Route::post('/selesai-akses/{waktuAkses_id}', [WaktuAksesController::class, 'selesaiAkses'])->name('waktuAkses.selesai');
+// Route::post('/mulai-akses/{submateri_id}', [WaktuAksesController::class, 'mulaiAkses']);
+// Route::post('/selesai-akses/{waktuAkses_id}', [WaktuAksesController::class, 'selesaiAkses']);
+// Route::get('/waktu-akses/{waktuAkses_id}', [WaktuAksesController::class, 'show']);
+// Route::get('/user-akses/{user_id}', [WaktuAksesController::class, 'userAkses']);
+// Route::get('/submateri-akses/{submateri_id}', [WaktuAksesController::class, 'submateriAkses']);
+// Route::get('/submateri/{submateri_id}', [SubmateriController::class, 'show'])->middleware('catat.waktu.akses')->name('submateri.show');
+
+
 // Resource route untuk materi dan submateri
 Route::resource('materi', MateriController::class);
 Route::resource('submateri', SubmateriController::class);
@@ -29,6 +40,8 @@ Route::resource('jawabanWarmUp', JawabWarmUpController::class);
 Route::resource('evaluasi', EvaluasiController::class);
 Route::resource('pertanyaan', PertanyaanController::class);
 Route::resource('hasilEvaluasi', HasilEvaluasiController::class);
+Route::post('/waktu-akses', [WaktuAksesController::class, 'store']);
+
 
 Route::middleware('auth')->get('/hasil-evaluasi/{evaluasiId}', [HasilEvaluasiController::class, 'tampilkanHasil'])->name('evaluasi.hasil');
 
@@ -49,8 +62,7 @@ Route::middleware(['auth', 'siswa'])->group(function () {
     Route::get('/classroomactivity', [PertemuanController::class, 'index'])->name('siswa.classroom');
     Route::get('/pertemuan/{id}', [PertemuanController::class, 'show'])->name('pertemuan.show');
     Route::get('aktifitas/{id}', [AktifitasController::class, 'show'])->name('aktifitas.show');
-
-
+    
     Route::get('/jawaban-warm-up/create',[JawabWarmUpController::class,'create'])->name('jawabanWarmUp.create');
     Route::get('/jawaban-warm-up/{id}/edit',[JawabWarmUpController::class,'edit'])->name('jawabanWarmUp.edit');
     Route::put('/jawaban-warm-up/{id}',[JawabWarmUpController::class,'update'])->name('jawabanWarmUp.update');
