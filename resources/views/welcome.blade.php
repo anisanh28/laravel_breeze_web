@@ -68,7 +68,7 @@
 
         /* Button styling */
         .cta-button {
-            background-color: #ee5006;
+            background-color: #ff5608;
             padding: 0.75rem 2rem;
             font-size: 1rem;
             color: #fff;

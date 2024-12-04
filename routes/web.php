@@ -23,16 +23,6 @@ Route::get('/tentangkami', function () {
     return view('tentangkami');
 });
 
-// Route::post('/mulai-akses/{submateri_id}', [WaktuAksesController::class, 'mulaiAkses'])->name('waktuAkses.mulai');
-// Route::post('/selesai-akses/{waktuAkses_id}', [WaktuAksesController::class, 'selesaiAkses'])->name('waktuAkses.selesai');
-// Route::post('/mulai-akses/{submateri_id}', [WaktuAksesController::class, 'mulaiAkses']);
-// Route::post('/selesai-akses/{waktuAkses_id}', [WaktuAksesController::class, 'selesaiAkses']);
-// Route::get('/waktu-akses/{waktuAkses_id}', [WaktuAksesController::class, 'show']);
-// Route::get('/user-akses/{user_id}', [WaktuAksesController::class, 'userAkses']);
-// Route::get('/submateri-akses/{submateri_id}', [WaktuAksesController::class, 'submateriAkses']);
-// Route::get('/submateri/{submateri_id}', [SubmateriController::class, 'show'])->middleware('catat.waktu.akses')->name('submateri.show');
-
-
 // Resource route untuk materi dan submateri
 Route::resource('materi', MateriController::class);
 Route::resource('submateri', SubmateriController::class);
@@ -43,7 +33,6 @@ Route::resource('hasilEvaluasi', HasilEvaluasiController::class);
 Route::post('/waktu-akses', [WaktuAksesController::class, 'store']);
 
 Route::middleware('auth')->get('/hasil-evaluasi/{evaluasiId}', [HasilEvaluasiController::class, 'tampilkanHasil'])->name('evaluasi.hasil');
-
 
 // Middleware untuk autentikasi
 Route::middleware('auth')->group(function () {

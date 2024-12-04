@@ -13,11 +13,17 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+        <!-- Custom Styles for Background Gradient -->
+        <style>
+            body {
+                background: linear-gradient(to left, #4f46e5, #14b8a6);
+            }
+        </style>
     </head>
-    <body class="font-sans text-gray-900 antialiased bg-gradient-to-b from-[#c6dfff] to-[#00224e]">
+    <body class="font-sans text-gray-900 antialiased">
         <div class="min-h-screen flex flex-col justify-center items-center pt-6 sm:pt-0">
             <div class="w-full sm:max-w-md mt-6 px-6 py-8 bg-white shadow-xl rounded-lg overflow-hidden">
-                
                 {{ $slot }}
             </div>
         </div>
