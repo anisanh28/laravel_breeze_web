@@ -42,7 +42,6 @@ Route::resource('pertanyaan', PertanyaanController::class);
 Route::resource('hasilEvaluasi', HasilEvaluasiController::class);
 Route::post('/waktu-akses', [WaktuAksesController::class, 'store']);
 
-
 Route::middleware('auth')->get('/hasil-evaluasi/{evaluasiId}', [HasilEvaluasiController::class, 'tampilkanHasil'])->name('evaluasi.hasil');
 
 
@@ -62,7 +61,7 @@ Route::middleware(['auth', 'siswa'])->group(function () {
     Route::get('/classroomactivity', [PertemuanController::class, 'index'])->name('siswa.classroom');
     Route::get('/pertemuan/{id}', [PertemuanController::class, 'show'])->name('pertemuan.show');
     Route::get('aktifitas/{id}', [AktifitasController::class, 'show'])->name('aktifitas.show');
-    
+
     Route::get('/jawaban-warm-up/create',[JawabWarmUpController::class,'create'])->name('jawabanWarmUp.create');
     Route::get('/jawaban-warm-up/{id}/edit',[JawabWarmUpController::class,'edit'])->name('jawabanWarmUp.edit');
     Route::put('/jawaban-warm-up/{id}',[JawabWarmUpController::class,'update'])->name('jawabanWarmUp.update');
@@ -132,6 +131,9 @@ Route::middleware(['auth', 'guru'])->group(function () {
     Route::get('/aktifitas/{id}/edit', [AktifitasController::class, 'edit'])->name('aktifitas.edit');
     Route::put('/aktifitas/{id}', [AktifitasController::class, 'update'])->name('aktifitas.update');
     Route::delete('/aktifitas/{id}', [AktifitasController::class, 'destroy'])->name('aktifitas.destroy');
+
+    Route::get('/waktu-akses/{submateri_id}', [WaktuAksesController::class, 'index'])->name('waktuAkses.index');
+
 
 });
 

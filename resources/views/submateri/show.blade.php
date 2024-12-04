@@ -103,12 +103,11 @@
     <script>
         window.onload = function () {
     let waktu_mulai = new Date();
-    let waktu_selesai = null;
 
-    // Menghitung waktu akses saat keluar halaman
-    window.addEventListener("beforeunload", function () {
-        waktu_selesai = new Date();
-        let duration = Math.round((waktu_selesai - waktu_mulai) / 1000);  // Durasi dalam detik
+    // Fungsi penyimpanan berkala
+    const simpanData = () => {
+        let waktu_selesai = new Date();
+        let duration = Math.round((waktu_selesai - waktu_mulai) / 1000);
 
         fetch('/waktu-akses', {
             method: 'POST',
@@ -123,19 +122,10 @@
                 submateri_id: {{ $submateri->id }},
                 user_id: {{ Auth::id() }}
             })
-        })
-        .then(response => {
-            if (response.ok) {
-                console.log('Waktu akses berhasil disimpan.');
-            } else {
-                console.error('Gagal menyimpan waktu akses. Status:', response.status);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
         });
-    });
+    };
+    window.addEventListener("beforeunload", simpanData);
 };
-    </script>
 
+    </script>
 </x-app-layout>
