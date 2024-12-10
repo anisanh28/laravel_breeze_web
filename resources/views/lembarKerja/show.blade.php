@@ -53,42 +53,43 @@
                             <!-- Instructions -->
                             <p class="text-medium text-black mb-4">{!! nl2br(e($aktifitasItem->intruksi)) !!}</p>
 
-                            <!-- Display Submitted Jawaban -->
-                            <div class="mb-4">
-                                <label class="block font-semibold">Jawaban:</label>
-                                <p class="text-gray-700">{{ $aktifitasItem->lembarKerja->jawaban ?? 'Tidak ada jawaban' }}</p>
-                            </div>
-
-                            <!-- Display Uploaded File -->
-                            @if($aktifitasItem->lembarKerja && $aktifitasItem->lembarKerja->file)
+                            @foreach($aktifitasItem->lembarKerja as $lembarKerja)
                                 <div class="mb-4">
-                                    <label class="block font-semibold">Lampiran:</label>
-                                    @php
-                                        $uploadedFilePath = $aktifitasItem->lembarKerja->file;
-                                        $fileExtension = pathinfo($uploadedFilePath, PATHINFO_EXTENSION);
-                                    @endphp
-
-                                    @if(in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif']))
-                                        <img src="{{ asset('storage/' . $uploadedFilePath) }}" alt="Uploaded Image" class="rounded-lg max-w-full sm:max-w-xs">
-                                    @elseif(in_array($fileExtension, ['mp4', 'webm', 'ogg']))
-                                        <video controls class="w-full max-w-[200px] rounded-lg">
-                                            <source src="{{ asset('storage/' . $uploadedFilePath) }}" type="video/{{ $fileExtension }}">
-                                            Browser Anda tidak mendukung pemutaran video.
-                                        </video>
-                                    @elseif(in_array($fileExtension, ['mp3', 'wav', 'ogg']))
-                                        <audio controls class="w-full">
-                                            <source src="{{ asset('storage/' . $uploadedFilePath) }}" type="audio/{{ $fileExtension }}">
-                                            Browser Anda tidak mendukung pemutaran audio.
-                                        </audio>
-                                    @elseif($fileExtension === 'pdf')
-                                        <embed src="{{ asset('storage/' . $uploadedFilePath) }}" type="application/pdf" class="w-full h-96 rounded-lg">
-                                    @else
-                                        <a href="{{ asset('storage/' . $uploadedFilePath) }}" class="text-orange-400 hover:text-orange-600 transition-all duration-300">
-                                            Lihat File
-                                        </a>
-                                    @endif
+                                    <label class="block font-semibold">Jawaban:</label>
+                                    <p class="text-gray-700">{{ $lembarKerja->lembar_kerja ?? 'Tidak ada jawaban' }}</p>
                                 </div>
-                            @endif
+
+                                <!-- Display Uploaded File -->
+                                @if($lembarKerja->lampiran)
+                                    <div class="mb-4">
+                                        <label class="block font-semibold">Lampiran:</label>
+                                        @php
+                                            $uploadedFilePath = $lembarKerja->lampiran;
+                                            $fileExtension = pathinfo($uploadedFilePath, PATHINFO_EXTENSION);
+                                        @endphp
+
+                                        @if(in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif']))
+                                            <img src="{{ asset('storage/' . $uploadedFilePath) }}" alt="Uploaded Image" class="rounded-lg max-w-full sm:max-w-xs">
+                                        @elseif(in_array($fileExtension, ['mp4', 'webm', 'ogg']))
+                                            <video controls class="w-full max-w-[200px] rounded-lg">
+                                                <source src="{{ asset('storage/' . $uploadedFilePath) }}" type="video/{{ $fileExtension }}">
+                                                Browser Anda tidak mendukung pemutaran video.
+                                            </video>
+                                        @elseif(in_array($fileExtension, ['mp3', 'wav', 'ogg']))
+                                            <audio controls class="w-full">
+                                                <source src="{{ asset('storage/' . $uploadedFilePath) }}" type="audio/{{ $fileExtension }}">
+                                                Browser Anda tidak mendukung pemutaran audio.
+                                            </audio>
+                                        @elseif($fileExtension === 'pdf')
+                                            <embed src="{{ asset('storage/' . $uploadedFilePath) }}" type="application/pdf" class="w-full h-96 rounded-lg">
+                                        @else
+                                            <a href="{{ asset('storage/' . $uploadedFilePath) }}" class="text-orange-400 hover:text-orange-600 transition-all duration-300">
+                                                Lihat File
+                                            </a>
+                                        @endif
+                                    </div>
+                                @endif
+                            @endforeach
                         </div>
                     @endforeach
                 @else

@@ -31,7 +31,7 @@ class LembarKerjaController extends Controller
             'aktifitas_id' => 'required|array',
             'aktifitas_id.*' => 'exists:aktifitas,id', // Validasi setiap ID aktivitas
             'lembar_kerja' => 'required|array',
-            'lembar_kerja.*' => 'string', // Validasi jawaban untuk setiap aktivitas
+            'lembar_kerja.*' => 'string',
             'lampiran.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf,docx,txt,mp4|max:10240', // Validasi untuk lampiran (jika ada)
         ]);
 
@@ -56,11 +56,10 @@ class LembarKerjaController extends Controller
 
         // Setelah menyimpan, kembali ke halaman sebelumnya
         return redirect()->route('lembarKerja.show', [
-            'pertemuan' => $lembarKerja->aktifitas->pertemuan_id, // Sesuaikan dengan hubungan model Anda
+            'pertemuan' => $lembarKerja->aktifitas->pertemuan_id,
             'aktifitas' => $lembarKerja->aktifitas_id,
         ])->with('success', 'Lembar Kerja berhasil disubmit untuk semua aktivitas!');
     }
-
 
     public function show($id)
     {
