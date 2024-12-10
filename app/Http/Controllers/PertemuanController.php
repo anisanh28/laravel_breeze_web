@@ -12,13 +12,13 @@ class PertemuanController extends Controller
         $user = Auth::user();
 
         if ($user->role === 'guru') {
-            $pertemuan = Pertemuan::all();  
-            return view('guru.aktifitas', compact('pertemuan')); 
+            $pertemuan = Pertemuan::all();
+            return view('guru.aktifitas', compact('pertemuan'));
         }
 
         if ($user->role === 'siswa') {
-            $pertemuan = Pertemuan::all(); 
-            return view('siswa.classroom', compact('pertemuan')); 
+            $pertemuan = Pertemuan::all();
+            return view('siswa.classroom', compact('pertemuan'));
         }
 
         return redirect()->route('login')->with('error', 'Anda tidak memiliki izin untuk mengakses materi ini.');
@@ -63,7 +63,7 @@ class PertemuanController extends Controller
         ]);
 
         $pertemuan->update([
-            'judul' => $request->judul, 
+            'judul' => $request->judul,
         ]);
 
         return redirect()->route('guru.aktifitas')->with('success', 'Pertemuan berhasil diperbarui!');

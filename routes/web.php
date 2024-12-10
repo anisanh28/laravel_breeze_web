@@ -48,7 +48,7 @@ Route::middleware(['auth', 'siswa'])->group(function () {
     Route::get('/materi/{materi}/submateri/{submateri}', [SubMateriController::class, 'show'])->name('submateri.show');
 
     Route::get('/classroomactivity', [PertemuanController::class, 'index'])->name('siswa.classroom');
-    Route::get('/pertemuan/{id}', [PertemuanController::class, 'show'])->name('pertemuan.show');
+    Route::get('siswa/pertemuan/{id}', [PertemuanController::class, 'show'])->name('pertemuan.show');
     Route::get('aktifitas/{id}', [AktifitasController::class, 'show'])->name('aktifitas.show');
 
     Route::get('/jawaban-warm-up/create',[JawabWarmUpController::class,'create'])->name('jawabanWarmUp.create');
@@ -108,7 +108,7 @@ Route::middleware(['auth', 'guru'])->group(function () {
 
     Route::get('hasilEvaluasi', [HasilEvaluasiController::class, 'index'])->name('hasilEvaluasi.index');
 
-    Route::get('/pertemuan/create', [pertemuanController::class, 'create'])->name('pertemuan.create');
+    Route::get('/pertemuan/create', [PertemuanController::class, 'create'])->name('pertemuan.create');
     Route::post('/pertemuan', [PertemuanController::class, 'store'])->name('pertemuan.store');
     Route::get('/pertemuan/{pertemuan}/edit', [PertemuanController::class, 'edit'])->name('pertemuan.edit');
     Route::put('/pertemuan/{pertemuan}', [PertemuanController::class, 'update'])->name('pertemuan.update');
